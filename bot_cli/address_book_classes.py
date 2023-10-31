@@ -3,19 +3,7 @@ from datetime import datetime
 import json
 import os.path
 from collections import defaultdict, UserDict
-
-
-FILE_PATH = "contacts.json"
-
-WEEK_DAY_DICT = {
-    0: "Monday",
-    1: "Tuesday",
-    2: "Wednesday",
-    3: "Thursday",
-    4: "Friday",
-    5: "Saturday",
-    6: "Sunday",
-}
+from constants import WEEK_DAY_DICT, FILE_PATH
 
 
 class Field:
@@ -155,7 +143,7 @@ class AddressBook(UserDict):
 
             json.dump(self.data, file, default=custom_serializer, indent=4)
 
-    def get_birthdays_per_week(self) -> dict:
+    def get_birthdays_per_week(self, period: int = 7) -> dict | None:
         users_dictionary_per_weekday = defaultdict(list)
         current_date = datetime.today().date()
         celebrate_dict = dict()
@@ -172,12 +160,8 @@ class AddressBook(UserDict):
 
                 delta_days = (birthday_this_year - current_date).days
 
-                if delta_days < 7:
+                if delta_days < period:
                     week_day = birthday_this_year.weekday()
-
-                    if week_day in [5, 6]:
-                        week_day = 0
-
                     users_dictionary_per_weekday[WEEK_DAY_DICT[week_day]].append(
                         user)
 
@@ -193,10 +177,10 @@ class AddressBook(UserDict):
 
 if __name__ == '__main__':
     # Створення нової адресної книги
-    book = AddressBook()
+    address_book = AddressBook()
 
     if os.path.exists(FILE_PATH):
-        book.load_contacts(FILE_PATH)
+        address_book.load_contacts(FILE_PATH)
         print(f"Contacts were loaded from '{FILE_PATH}' file")
     else:
         print("New address book was created")
@@ -206,30 +190,30 @@ if __name__ == '__main__':
 
     john_record.add_phone(Phone("5555555555"))
     print(john_record.get_phones())
-    john_record.add_birthday(Birthday("02.11.1984"))
+    john_record.add_birthday(Birthday("03.11.1984"))
 
     # Додавання запису John до адресної книги
-    book.add_record(john_record)
+    address_book.add_record(john_record)
 
     # Створення та додавання нового запису для Jane
     jane_record = Record(Name("Jane"), Phone("0876543210"))
-    jane_record.add_birthday(Birthday("22.10.1984"))
-    book.add_record(jane_record)
+    jane_record.add_birthday(Birthday("03.11.1987"))
+    address_book.add_record(jane_record)
 
     print(jane_record.show_birthday())
 
     # Створення та додавання нового запису для Simon
     simon_record = Record(Name("Simon"), Phone("0811234567"))
-    book.add_record(simon_record)
+    address_book.add_record(simon_record)
 
     # Виведення всіх записів у книзі
-    for name, record in book.data.items():
+    for name, record in address_book.data.items():
         print(record)
 
     print('-' * 10)
 
     # Знаходження та редагування телефону для John
-    john = book.find(Name("John"))
+    john = address_book.find(Name("John"))
     john.edit_phone(Phone("5555555555"), Phone("1112223333"))
     print(john)  # Виведення: Contact name: John, phones: 1112223333;
 
@@ -254,11 +238,11 @@ if __name__ == '__main__':
     print('-' * 10)
 
     # Виведення всіх записів у книзі
-    for name, record in book.data.items():
+    for name, record in address_book.data.items():
         print(record)
 
     # Виведення днів нарождення на наступний тиждень
-    print(book.get_birthdays_per_week())
+    print(address_book.get_birthdays_per_week())
 
     # Save data into JSON file
-    book.save_contacts(FILE_PATH)
+    address_book.save_contacts(FILE_PATH)
