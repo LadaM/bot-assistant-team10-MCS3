@@ -16,6 +16,8 @@ class ContactAlreadyExistsError(Exception):
 class CommandError(Exception):
     pass
 
+class EmailValidationError(Exception):
+    pass
 
 def contact_not_found_error(func):
     def inner(args):
@@ -42,6 +44,16 @@ def add_contact_error(func):
 
     return inner
 
+def add_email_error(func):
+    def inner(args):
+        try:
+            return func(args)
+        except CommandError:
+            print(Fore.RED + "Please use format: add-email {name} {email}")
+        except EmailValidationError:
+            print(Fore.RED + "Email address is not valid.")
+
+    return inner
 
 def delete_contact_error(func):
     def inner(*args):

@@ -46,12 +46,34 @@ class Birthday(Field):
     def __str__(self):
         return datetime.strftime(self.value, '%d.%m.%Y')
 
+class Email(Field):
+    def __init__(self, value):
+        self.__email = None
+        super().__init__(value)
+    
+    @property
+    def value(self):
+        return self.__email
+
+    @value.setter
+    def value(self, value):
+        email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+        regex_search = re.search(email_regex, value)
+        try:
+            self.__email = regex_search.string
+        except AttributeError:
+            self.__email = None
+
+    def __str__(self):
+        return str(self.value)
+
 
 class Record:
     def __init__(self, name: Name, phone: Phone = None):
         self.name = name
         self.phones = []
         self.birthday = None
+        self.email = None
         if phone:
             self.phones.append(phone)
 
@@ -84,15 +106,16 @@ class Record:
     def add_birthday(self, birthday: Birthday):
         self.birthday = birthday
 
+    def add_email(self, email: Email):
+        self.email = email
+
     def show_birthday(self):
         return self.birthday
 
     def __str__(self):
-        if self.birthday:
-            return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {datetime.strftime(self.birthday.value, '%d.%m.%Y')}"
-        else:
-            return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
-
+        birthday_str = f", birthday: {datetime.strftime(self.birthday.value, '%d.%m.%Y')}" if self.birthday is not None else ""
+        email_str = f", email: {self.email.value}" if self.email is not None else ""
+        return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}{birthday_str}{email_str}"
 
 class AddressBook(UserDict):
 
@@ -120,6 +143,10 @@ class AddressBook(UserDict):
                 birthday = Birthday(record_data['birthday'])
                 record.add_birthday(birthday)
 
+            if record_data['email']:
+                email = Email(record_data['email'])
+                record.add_email(email)
+
             address_book.add_record(record)
 
         return address_book
@@ -137,6 +164,7 @@ class AddressBook(UserDict):
                     return {
                         'name': obj.name.value,
                         'phones': [phone.value for phone in obj.phones],
+                        'email': str(obj.email) if obj.email else None,
                         'birthday': str(obj.birthday) if obj.birthday else None
                     }
                 return obj
