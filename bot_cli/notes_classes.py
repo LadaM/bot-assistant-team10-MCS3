@@ -39,7 +39,7 @@ from address_book_classes import Field
 
 class Note(Field):
     def __init__(self, value):
-        self.__value = value
+        super().__init__(value)
 
     @property
     def value(self):
@@ -52,6 +52,7 @@ class Note(Field):
 
 class Tag(Field):
     def __init__(self, value):
+        super().__init__(value)
         self.__value = value
 
     @property
@@ -65,6 +66,7 @@ class Tag(Field):
 
 class Notes(UserDict):
     def __init__(self):
+        super().__init__()
         self.data = {"notes": []}
 
     def add_note(self, note):
