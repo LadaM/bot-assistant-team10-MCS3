@@ -94,7 +94,7 @@ class Record:
             return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
 
 
-class AddressBook(UserDict):
+class AddressBook(UserDict[str, Record]):
 
     def add_record(self, record: Record):
         self.data[record.name.value] = record
@@ -104,6 +104,9 @@ class AddressBook(UserDict):
 
     def delete(self, name: Name):
         self.__delitem__(name.value)
+
+    def get_records(self) -> list[Record]:
+        return self.data.values()
 
     @classmethod
     def from_json(cls, data):
