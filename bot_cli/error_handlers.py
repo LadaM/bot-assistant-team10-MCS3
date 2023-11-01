@@ -18,6 +18,10 @@ class CommandError(Exception):
     pass
 
 
+class EmailValidationError(Exception):
+    pass
+
+
 def contact_not_found_error(func):
     def inner(args):
         try:
@@ -123,5 +127,29 @@ def max_period_error(func):
             return func(args)
         except ValueError:
             print(Fore.RED + f"Period should be int between 1 and 365")
+
+    return inner
+
+
+def add_email_error(func):
+    def inner(args):
+        try:
+            return func(args)
+        except CommandError:
+            print(Fore.RED + "Please use format: add-email {name} {email}")
+        except EmailValidationError:
+            print(Fore.RED + "Email address is not valid.")
+
+    return inner
+
+
+def show_email_error(func):
+    def inner(args):
+        try:
+            return func(args)
+        except CommandError:
+            print(Fore.RED + "Please use format: show-email {user}")
+        except ValueError:
+            print(Fore.RED + f"Contact has not set email yet")
 
     return inner
