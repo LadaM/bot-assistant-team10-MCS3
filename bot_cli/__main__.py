@@ -36,6 +36,10 @@ def main(address_book):
                 print_info("How can I help you?")
             case "add-contact":
                 commands.add_contact(args)
+            case "add-address":
+                commands.add_address(args)
+            case "show-address":
+                commands.show_address(args)
             case "delete-contact":
                 commands.delete_contact(args)
             case "change-phone":

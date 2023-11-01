@@ -1,9 +1,8 @@
-from address_book_classes import Name, Phone, Birthday, Record, AddressBook
+from address_book_classes import Name, Phone, Birthday, Record, AddressBook, Address
 from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
     contact_not_found_error, add_birthday_error, show_birthday_error, max_period_error, CommandError, \
-    ContactAlreadyExistsError, ContactNotFoundError, search_error
+    ContactAlreadyExistsError, ContactNotFoundError, search_error, add_address_error, show_address_error
 import colorama
-from colorama import Fore
 from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS
 from print_util import print_warn, print_info, print_success, print_magenta
 
@@ -22,7 +21,7 @@ def help():
     formatted_commands = ""
 
     for key, value in sorted_commands.items():
-        formatted_commands += f">>> {key: <40}: {value: <}\n"
+        formatted_commands += f">>> {key: <45}: {value: <}\n"
 
     print_magenta(formatted_commands)
 
@@ -264,3 +263,43 @@ def birthdays(args):
         print_success(result)
     else:
         print_warn(f"There is no one to celebrate birthday for next {period} day(s)")
+
+
+@contact_not_found_error
+@add_address_error
+def add_address(args):
+    try:
+        name, *address = args
+        name = Name(name)
+        address = " ".join(address)
+    except:
+        raise CommandError
+
+    if address_book.find(name):
+        record: Record = address_book.find(name)
+        record.add_address(Address(address))
+    else:
+        raise ContactNotFoundError
+
+    address_book.save_contacts(FILE_PATH)
+    print_success("Address added successfully")
+
+
+@contact_not_found_error
+@show_address_error
+def show_address(args):
+    try:
+        name = args[0]
+        name = Name(name)
+    except:
+        raise CommandError
+
+    if address_book.find(name):
+        record: Record = address_book.find(name)
+    else:
+        raise ContactNotFoundError
+
+    if record.address:
+        print_success(f"{name} address: {record.show_address()}")
+    else:
+        raise ValueError
