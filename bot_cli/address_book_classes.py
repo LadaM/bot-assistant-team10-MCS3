@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 import os.path
 from collections import defaultdict, UserDict
-from constants import WEEK_DAY_DICT, FILE_PATH
+from constants import FILE_PATH
 
 
 class Field:
@@ -146,10 +146,9 @@ class AddressBook(UserDict[str, Record]):
 
             json.dump(self.data, file, default=custom_serializer, indent=4)
 
-    def get_birthdays_per_week(self, period: int = 7) -> dict | None:
-        users_dictionary_per_weekday = defaultdict(list)
+    def get_birthdays_per_period(self, period: int = 7) -> dict | None:
+        upcoming_birthdays = defaultdict(list)
         current_date = datetime.today().date()
-        celebrate_dict = dict()
 
         for user, record in self.data.items():
             if record.birthday:
@@ -164,18 +163,11 @@ class AddressBook(UserDict[str, Record]):
                 delta_days = (birthday_this_year - current_date).days
 
                 if delta_days < period:
-                    week_day = birthday_this_year.weekday()
-                    users_dictionary_per_weekday[WEEK_DAY_DICT[week_day]].append(
-                        user)
-
-        if users_dictionary_per_weekday:
-            for day in WEEK_DAY_DICT.values():
-                celebrate_users = ", ".join(users_dictionary_per_weekday[day])
-                celebrate_dict[f"{day}"] = celebrate_users
-        else:
-            return None
-
-        return celebrate_dict
+                    day_name = birthday_this_year.strftime('%A')
+                    birthday_date = datetime.strftime(birthday_this_year, '%A, %d %B')
+                    upcoming_birthdays[birthday_date].append(user)
+        sorted_data = dict(sorted(upcoming_birthdays.items()))
+        return sorted_data
 
 
 if __name__ == '__main__':
@@ -245,7 +237,7 @@ if __name__ == '__main__':
         print(record)
 
     # Виведення днів нарождення на наступний тиждень
-    print(address_book.get_birthdays_per_week())
+    print(address_book.get_birthdays_per_period())
 
     # Save data into JSON file
     address_book.save_contacts(FILE_PATH)

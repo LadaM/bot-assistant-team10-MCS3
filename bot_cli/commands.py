@@ -5,6 +5,7 @@ from error_handlers import add_contact_error, delete_contact_error, change_conta
 import colorama
 from colorama import Fore
 from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS
+from print_util import print_warn, print_info, print_success, print_magenta
 
 # Initialize colorama
 colorama.init(autoreset=True)
@@ -23,7 +24,7 @@ def help():
     for key, value in sorted_commands.items():
         formatted_commands += f">>> {key: <40}: {value: <}\n"
 
-    print(Fore.MAGENTA + formatted_commands)
+    print_magenta(formatted_commands)
 
 
 def parse_input(user_input: str):
@@ -71,8 +72,7 @@ def add_contact(args: list[str, str]):
         address_book.add_record(record)
 
     address_book.save_contacts(FILE_PATH)
-    print(Fore.GREEN +
-          f"Contact added successfully: {name} {phone}")
+    print_success(f"Contact added successfully: {name} {phone}")
 
 
 @contact_not_found_error
@@ -93,7 +93,7 @@ def delete_contact(args):
         raise ContactNotFoundError
 
     address_book.save_contacts(FILE_PATH)
-    print(Fore.GREEN + f"Contact '{name}' deleted successfully")
+    print_success(f"Contact '{name}' deleted successfully")
 
 
 @contact_not_found_error
@@ -123,8 +123,7 @@ def change_phone(args: list[str, str, str]):
             raise KeyError
 
         address_book.save_contacts(FILE_PATH)
-        print(Fore.GREEN +
-              f"Contact '{name}' updated successfully")
+        print_success(f"Contact '{name}' updated successfully")
     else:
         raise ContactNotFoundError
 
@@ -139,11 +138,12 @@ def search_contacts(args):
             if str(r).casefold().find(search_str) > 0:
                 search_result.append(r)
         if len(search_result) > 0:
-            print('\n'.join([str(r) for r in search_result]))
+            print_success('\n'.join([str(r) for r in search_result]))
         else:
-            print("No results found!")
+            print_warn("No results found!")
     except (ValueError, IndexError) as e:
         raise CommandError
+
 
 @contact_not_found_error
 @show_phones_error
@@ -158,8 +158,7 @@ def show_phones(args):
         raise CommandError
 
     if address_book.find(name):
-        print(
-            Fore.GREEN + f"{name.value}: {', '.join(address_book.find(name).get_phones())}")
+        print_success(f"{name.value}: {', '.join(address_book.find(name).get_phones())}")
     else:
         raise ContactNotFoundError
 
@@ -189,7 +188,7 @@ def add_birthday(args):
         raise ContactNotFoundError
 
     address_book.save_contacts(FILE_PATH)
-    print(Fore.GREEN + "Birthday added successfully")
+    print_success("Birthday added successfully")
 
 
 @contact_not_found_error
@@ -215,7 +214,7 @@ def show_birthday(args):
     else:
         raise ValueError
 
-    print(Fore.GREEN + f"{name} birthday: {birthday}")
+    print_success(f"{name} birthday: {birthday}")
 
 
 def show_all_contacts():
@@ -227,13 +226,17 @@ def show_all_contacts():
         result = list()
         for record in address_book.data.values():
             result.append(str(record))
-        print(Fore.LIGHTBLUE_EX + "\n".join(result))
+        print_info("\n".join(result))
     else:
-        print(Fore.LIGHTBLUE_EX + "No contacts have been added yet")
+        print_info("No contacts have been added yet")
 
 
 @max_period_error
 def birthdays(args):
+    """
+    ...upcoming birthdays...
+    default period is 7 days
+    """
     if args:
         try:
             period = int(args[0])
@@ -244,13 +247,20 @@ def birthdays(args):
     else:
         period = DEFAULT_PERIOD
 
-    get_birthdays_per_week = address_book.get_birthdays_per_week(period)
+    get_birthdays_per_period = address_book.get_birthdays_per_period(period)
 
-    if get_birthdays_per_week:
-        result = "Next week birthdays:\n" + "-" * 10 + "\n"
-        result += "\n".join([f"{day}: {celebrate_users}" for day, celebrate_users in get_birthdays_per_week.items()])
+    if get_birthdays_per_period:
+        formatted_data = []
+
+        for date, users in get_birthdays_per_period.items():
+            formatted_key = f'{date}: {", ".join(users)}'
+            formatted_data.append(formatted_key)
+
+        formatted_output = ",\n".join(formatted_data)
+
+        result = f"Birthdays for next {period} day(s):\n" + "-" * 10 + "\n"
+        result += formatted_output
         result += "\n" + "-" * 10
-        print(Fore.YELLOW + result)
+        print_success(result)
     else:
-        print(Fore.YELLOW +
-              "There is no one to celebrate birthday next week")
+        print_warn(f"There is no one to celebrate birthday for next {period} day(s)")
