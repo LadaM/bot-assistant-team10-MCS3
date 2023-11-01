@@ -34,13 +34,13 @@ def main(address_book):
                 commands.help()
             case "hello":
                 print_info("How can I help you?")
-            case "add":
+            case "add-contact":
                 commands.add_contact(args)
-            case "delete":
+            case "delete-contact":
                 commands.delete_contact(args)
-            case "change":
-                commands.change_contact(args)
-            case "phone":
+            case "change-phone":
+                commands.change_phone(args)
+            case "show-phone" | "phone":
                 commands.show_phones(args)
             case "all":
                 commands.show_all()

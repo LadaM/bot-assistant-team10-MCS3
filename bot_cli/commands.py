@@ -98,7 +98,7 @@ def delete_contact(args):
 
 @contact_not_found_error
 @change_contact_error
-def change_contact(args: list[str, str, str]):
+def change_phone(args: list[str, str, str]):
     """
     change exist contact phone number on new one
     prints command result
