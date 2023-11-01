@@ -1,7 +1,8 @@
-from address_book_classes import Name, Phone, Birthday, Record, AddressBook, Email
+from address_book_classes import Name, Phone, Birthday, Record, AddressBook, Email, Address
 from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
     contact_not_found_error, add_birthday_error, show_birthday_error, max_period_error, CommandError, \
-    ContactAlreadyExistsError, ContactNotFoundError, EmailValidationError, search_error, add_address_error, show_address_error, add_email_error
+    ContactAlreadyExistsError, ContactNotFoundError, EmailValidationError, search_error, add_address_error, \
+    show_address_error, add_email_error, show_email_error
 import colorama
 from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS
 from print_util import print_warn, print_info, print_success, print_magenta
@@ -118,7 +119,7 @@ def add_email(args):
         raise ContactNotFoundError
 
     address_book.save_contacts(FILE_PATH)
-    print(Fore.GREEN + "Email added successfully")
+    print_success("Email added successfully")
 
 
 @show_email_error

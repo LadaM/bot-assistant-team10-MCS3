@@ -5,9 +5,6 @@ from constants import FILE_PATH
 from print_util import print_error, print_info, print_warn
 
 
-# address_book: AddressBook
-
-
 def main(address_book):
     """
     Assistant bot helps to collect and manage user contacts.

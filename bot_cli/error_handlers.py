@@ -148,9 +148,9 @@ def add_email_error(func):
         try:
             return func(args)
         except CommandError:
-            print(Fore.RED + "Please use format: add-email {name} {email}")
+            print_error("Please use format: add-email {name} {email}")
         except EmailValidationError:
-            print(Fore.RED + "Email address is not valid.")
+            print_error("Email address is not valid.")
 
     return inner
 
@@ -160,8 +160,8 @@ def show_email_error(func):
         try:
             return func(args)
         except CommandError:
-            print(Fore.RED + "Please use format: show-email {user}")
+            print_error("Please use format: show-email {user}")
         except ValueError:
-            print(Fore.RED + f"Contact has not set email yet")
+            print_error(f"Contact has not set email yet")
 
     return inner
