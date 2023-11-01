@@ -307,7 +307,7 @@ def main():
             case "phone":
                 show_phones(args)
             case "all":
-                show_all()
+                show_all_contacts()
             case "add-birthday":
                 add_birthday(args)
             case "show-birthday":
