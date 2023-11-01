@@ -47,6 +47,18 @@ class Birthday(Field):
         return datetime.strftime(self.value, '%d.%m.%Y')
 
 
+class Email(Field):
+    def __init__(self, email):
+        if not re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b', email):
+            raise ValueError(
+                f"'{email}' is not valid email address")
+        self.email = email
+        super().__init__(email)
+
+    def __str__(self):
+        return str(self.email)
+
+
 class Address(Field):
     def __init__(self, value):
         if len(value) > 4:
@@ -61,6 +73,7 @@ class Record:
         self.phones = []
         self.birthday = None
         self.address = None
+        self.email = None
         if phone:
             self.phones.append(phone)
 
@@ -96,21 +109,23 @@ class Record:
     def show_birthday(self):
         return self.birthday
 
+    def add_email(self, email: Email):
+        self.email = email
+
     def add_address(self, address: Address):
         self.address = address
 
     def show_address(self):
         return self.address
 
+    def show_email(self):
+        return self.email
+
     def __str__(self):
-        if self.birthday and self.address:
-            return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {datetime.strftime(self.birthday.value, '%d.%m.%Y')}, address: {self.address.value}"
-        elif self.address:
-            return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, address: {self.address.value}"
-        elif self.birthday:
-            return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {datetime.strftime(self.birthday.value, '%d.%m.%Y')}"
-        else:
-            return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+        address_str = f", address: {self.address.value}" if self.address is not None else ""
+        birthday_str = f", birthday: {datetime.strftime(self.birthday.value, '%d.%m.%Y')}" if self.birthday is not None else ""
+        email_str = f", email: {self.email}" if self.email is not None else ""
+        return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}{birthday_str}{email_str}{address_str}"
 
 
 class AddressBook(UserDict[str, Record]):
@@ -146,6 +161,10 @@ class AddressBook(UserDict[str, Record]):
                 address = Address(record_data['address'])
                 record.add_address(address)
 
+            if record_data['email']:
+                email = Email(record_data['email'])
+                record.add_email(email)
+
             address_book.add_record(record)
 
         return address_book
@@ -164,7 +183,9 @@ class AddressBook(UserDict[str, Record]):
                         'name': obj.name.value,
                         'phones': [phone.value for phone in obj.phones],
                         'birthday': str(obj.birthday) if obj.birthday else None,
-                        'address': obj.address.value if obj.address else None
+                        'address': obj.address.value if obj.address else None,
+                        'email': str(obj.email) if obj.email else None,
+
                     }
                 return obj
 
@@ -210,6 +231,7 @@ if __name__ == '__main__':
     john_record.add_phone(Phone("5555555555"))
     print(john_record.get_phones())
     john_record.add_birthday(Birthday("03.11.1984"))
+    john_record.add_email(Email("oo@o.ua"))
 
     # Додавання запису John до адресної книги
     address_book.add_record(john_record)

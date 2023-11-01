@@ -1,7 +1,7 @@
-from address_book_classes import Name, Phone, Birthday, Record, AddressBook, Address
+from address_book_classes import Name, Phone, Birthday, Record, AddressBook, Email
 from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
     contact_not_found_error, add_birthday_error, show_birthday_error, max_period_error, CommandError, \
-    ContactAlreadyExistsError, ContactNotFoundError, search_error, add_address_error, show_address_error
+    ContactAlreadyExistsError, ContactNotFoundError, EmailValidationError, search_error, add_address_error, show_address_error, add_email_error
 import colorama
 from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS
 from print_util import print_warn, print_info, print_success, print_magenta
@@ -93,6 +93,58 @@ def delete_contact(args):
 
     address_book.save_contacts(FILE_PATH)
     print_success(f"Contact '{name}' deleted successfully")
+
+
+@contact_not_found_error
+@add_email_error
+def add_email(args):
+    """
+    add email for exist user
+    prints command result
+    """
+    try:
+        name, email = args
+        name = Name(name)
+    except:
+        raise CommandError
+    try:
+        email = Email(email)
+    except ValueError:
+        raise EmailValidationError
+    if address_book.find(name):
+        record: Record = address_book.find(name)
+        record.add_email(email)
+    else:
+        raise ContactNotFoundError
+
+    address_book.save_contacts(FILE_PATH)
+    print(Fore.GREEN + "Email added successfully")
+
+
+@show_email_error
+@contact_not_found_error
+def show_email(args):
+    """
+    show email for exist user
+    prints command result
+    """
+    try:
+        name = args[0]
+        name = Name(name)
+    except:
+        raise CommandError
+
+    if address_book.find(name):
+        record: Record = address_book.find(name)
+    else:
+        raise ContactNotFoundError
+
+    if record.email:
+        email = record.show_email()
+    else:
+        raise ValueError
+
+    print_success(f"{name} email: {email}")
 
 
 @contact_not_found_error

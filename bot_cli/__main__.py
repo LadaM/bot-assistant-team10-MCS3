@@ -40,6 +40,10 @@ def main(address_book):
                 commands.add_address(args)
             case "show-address":
                 commands.show_address(args)
+            case "add-email":
+                commands.add_email(args)
+            case "show-email":
+                commands.show_email(args)
             case "delete-contact":
                 commands.delete_contact(args)
             case "change-phone":
