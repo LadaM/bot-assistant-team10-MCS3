@@ -117,7 +117,7 @@ class Record:
         email_str = f", email: {self.email.value}" if self.email is not None else ""
         return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}{birthday_str}{email_str}"
 
-class AddressBook(UserDict):
+class AddressBook(UserDict[str, Record]):
 
     def add_record(self, record: Record):
         self.data[record.name.value] = record
@@ -127,6 +127,9 @@ class AddressBook(UserDict):
 
     def delete(self, name: Name):
         self.__delitem__(name.value)
+
+    def get_records(self) -> list[Record]:
+        return self.data.values()
 
     @classmethod
     def from_json(cls, data):

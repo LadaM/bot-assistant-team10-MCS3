@@ -1,5 +1,7 @@
 from address_book_classes import Name, Phone, Birthday, Record, AddressBook
-from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, contact_not_found_error, add_birthday_error, show_birthday_error, CommandError, ContactAlreadyExistsError, ContactNotFoundError
+from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
+    contact_not_found_error, add_birthday_error, show_birthday_error, max_period_error, CommandError, \
+    ContactAlreadyExistsError, ContactNotFoundError, search_error
 import os.path
 import colorama
 from colorama import Fore
@@ -123,7 +125,7 @@ def add_email(args):
 
 @contact_not_found_error
 @change_contact_error
-def change_contact(args: list[str, str, str]):
+def change_phone(args: list[str, str, str]):
     """
     change exist contact phone number on new one
     prints command result
@@ -153,6 +155,22 @@ def change_contact(args: list[str, str, str]):
     else:
         raise ContactNotFoundError
 
+
+@search_error
+def search_contacts(args):
+    """Finds all records stored in the address book if any attribute of the record match the search string"""
+    try:
+        search_str = args[0]
+        search_result = []
+        for r in address_book.get_records():
+            if str(r).casefold().find(search_str) > 0:
+                search_result.append(r)
+        if len(search_result) > 0:
+            print('\n'.join([str(r) for r in search_result]))
+        else:
+            print("No results found!")
+    except (ValueError, IndexError) as e:
+        raise CommandError
 
 @contact_not_found_error
 @show_phones_error
