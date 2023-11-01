@@ -3,10 +3,10 @@ import os.path
 import commands
 from constants import FILE_PATH
 from print_util import print_error, print_info, print_warn
+from notes_classes import Notes
 
 
 # address_book: AddressBook
-
 
 def main(address_book):
     """
@@ -14,6 +14,9 @@ def main(address_book):
 
     To see available commands enter 'help' command
     """
+    # notebook that holds all the notes that are stored so far
+    notebook = Notes()
+    # TODO when JSON serialization is ready, import existing notes
     # global address_book
     # create a new address book or load daya from a file
     # address_book = AddressBook()
@@ -36,6 +39,8 @@ def main(address_book):
                 print_info("How can I help you?")
             case "add-contact":
                 commands.add_contact(args)
+            case "add-note":
+                commands.add_note(notebook, args)
             case "delete-contact":
                 commands.delete_contact(args)
             case "change-phone":

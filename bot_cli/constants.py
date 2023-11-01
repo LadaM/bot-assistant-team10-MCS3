@@ -37,3 +37,6 @@ WEEK_DAY_DICT = {
     5: "Saturday",
     6: "Sunday",
 }
+
+MIN_NOTE_LEN = 2
+MIN_SEARCH_STR_LEN = 2

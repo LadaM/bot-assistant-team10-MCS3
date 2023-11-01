@@ -70,7 +70,10 @@ class Notes(UserDict):
         self.data = {"notes": []}
 
     def add_note(self, note):
-        self.data["notes"].append({"note": Note(note), "tags": []})
+        notes_ = self.data["notes"]
+        n = Note(note)
+        notes_.append({"note": n, "tags": []})
+        return len(notes_), n
 
     def remove_note(self, index):
         del self.data["notes"][index - 1]

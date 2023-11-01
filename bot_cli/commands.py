@@ -1,10 +1,12 @@
+from print_util import print_error, print_success
 from address_book_classes import Name, Phone, Birthday, Record, AddressBook
+from notes_classes import Notes
 from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
     contact_not_found_error, add_birthday_error, show_birthday_error, max_period_error, CommandError, \
-    ContactAlreadyExistsError, ContactNotFoundError, search_error
+    ContactAlreadyExistsError, ContactNotFoundError, search_error, note_error_handler
 import colorama
 from colorama import Fore
-from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS
+from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN
 
 # Initialize colorama
 colorama.init(autoreset=True)
@@ -145,6 +147,7 @@ def search_contacts(args):
     except (ValueError, IndexError) as e:
         raise CommandError
 
+
 @contact_not_found_error
 @show_phones_error
 def show_phones(args):
@@ -254,3 +257,12 @@ def birthdays(args):
     else:
         print(Fore.YELLOW +
               "There is no one to celebrate birthday next week")
+
+
+@note_error_handler
+def add_note(notebook: Notes, args):
+    text = ' '.join(args)
+    if text.isspace() or len(text) < MIN_NOTE_LEN:
+        raise ValueError(f'Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long')
+    note_id, _ = notebook.add_note(text)
+    print_success(f"Note with id {note_id} created successfully")
