@@ -1,5 +1,6 @@
 import colorama
 from colorama import Fore
+from print_util import print_error
 
 # Initialize colorama
 colorama.init(autoreset=True)
@@ -68,10 +69,6 @@ def change_contact_error(func):
                 Fore.RED + f"Contact '{args[0].capitalize()}' has not phone number '{args[1]}'")
 
     return inner
-
-
-def print_error(msg: str):
-    return print(Fore.RED + msg)
 
 
 def search_error(func):
