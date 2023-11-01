@@ -51,7 +51,6 @@ class Email(Field):
         if not re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b', email):
             raise ValueError(
                 f"'{email}' is not valid email address")
-        self.email = email
         super().__init__(email)
     
     def __str__(self):
