@@ -42,8 +42,8 @@ def main(address_book):
                 commands.change_phone(args)
             case "show-phone" | "phone":
                 commands.show_phones(args)
-            case "all":
-                commands.show_all()
+            case "all-contacts" | "all-contact":
+                commands.show_all_contacts()
             case "add-birthday":
                 commands.add_birthday(args)
             case "show-birthday":
