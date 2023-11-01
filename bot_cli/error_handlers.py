@@ -1,5 +1,6 @@
 import colorama
 from colorama import Fore
+from print_util import print_error
 
 # Initialize colorama
 colorama.init(autoreset=True)
@@ -66,6 +67,16 @@ def change_contact_error(func):
         except KeyError:
             print(
                 Fore.RED + f"Contact '{args[0].capitalize()}' has not phone number '{args[1]}'")
+
+    return inner
+
+
+def search_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except CommandError:
+            print_error("Invalid search string. Expecting string at least 2 characters long!")
 
     return inner
 
