@@ -34,19 +34,12 @@ Notes(UserDict) - звичайний словни вигляд матиме та
 """
 
 from collections import UserDict
-
-
-class Field:
-    def __init__(self, value: str):
-        self.value = value
-
-    def __str__(self):
-        return self.value
+from address_book_classes import Field
 
 
 class Note(Field):
     def __init__(self, value):
-        self.__value = value.capitalize()
+        self.__value = value
 
     @property
     def value(self):
@@ -54,12 +47,12 @@ class Note(Field):
 
     @value.setter
     def value(self, value):
-        self.__value = value.capitalize()
+        self.__value = value
 
 
 class Tag(Field):
     def __init__(self, value):
-        self.__value = value.capitalize()
+        self.__value = value
 
     @property
     def value(self):
@@ -67,7 +60,7 @@ class Tag(Field):
 
     @value.setter
     def value(self, value):
-        self.__value = value.capitalize()
+        self.__value = value
 
 
 class Notes(UserDict):
@@ -93,15 +86,15 @@ class Notes(UserDict):
         data = self.data["notes"][index - 1]
         note = str(data["note"])
         tags = [str(tag) for tag in data["tags"]]
-        return {"Note": note, "Tags": tags}
+        return {"Note": note.capitalize(), "Tags": tags}
 
     def find_note_by_subtext(self, sub_text):
         searched_note = []
         for data in self.data["notes"]:
-            note = str(data["note"])
-            tags = [str(tag) for tag in data["tags"]]
-            if sub_text in note:
-                searched_note.append({"Note": note, "Tags": tags})
+            note = str(data["note"]).casefold()
+            tags = [str(tag).casefold() for tag in data["tags"]]
+            if sub_text.casefold() in note:
+                searched_note.append({"Note": note.capitalize(), "Tags": tags})
         return searched_note
 
     def show_notes(self):
@@ -109,7 +102,7 @@ class Notes(UserDict):
         for index, data in enumerate(self.data["notes"]):
             note = str(data["note"])
             tags = [str(tag) for tag in data["tags"]]
-            notes.append({index: {"Note": note, "Tags": tags}})
+            notes.append({index: {"Note": note.capitalize(), "Tags": tags}})
 
         return str(notes)
 
@@ -118,16 +111,16 @@ class Notes(UserDict):
 
     def remove_tag(self, note_index, tag):
         tags = [str(tag) for tag in self.data["notes"][note_index - 1]["tags"]]
-        tag_index = tags.index(tag.capitalize())
+        tag_index = tags.index(tag)
         del self.data["notes"][note_index - 1]["tags"][tag_index]
 
     def find_notes_by_tag(self, tag):
         searched_note = []
         for data in self.data["notes"]:
-            note = str(data["note"])
-            tags = [str(tag) for tag in data["tags"]]
-            if tag.capitalize() in tags:
-                searched_note.append({"Note": note, "Tags": tags})
+            note = str(data["note"]).casefold()
+            tags = [str(tag).casefold() for tag in data["tags"]]
+            if tag.casefold() in tags:
+                searched_note.append({"Note": note.capitalize(), "Tags": tags})
         return searched_note
 
     def change_tag(self):
@@ -140,26 +133,27 @@ class Notes(UserDict):
         return str(notes)
 
 
-notes = Notes()
-notes.add_note("My first note")
-notes.add_note("My second note")
-notes.add_note("My third note")
-print(notes.show_notes())
-notes.add_tag(1, "TTT")
-notes.add_tag(1, "AAA")
-notes.add_tag(1, "BBB")
-notes.add_tag(2, "BBB")
-print(notes.show_notes())
-notes.remove_tag(1, "TTT")
-print(notes.show_notes())
-notes.update_note(1, "additional info")
-print(notes.show_notes())
-notes.remove_note(1)
-# ++
-print(notes.show_notes())
-print(notes.show_notes())
-print(f"here is your note by index: {notes.find_note_by_index(1)}")
-notes.replace_note(1, "Replaced note")
-print(f"here is your by text: {notes.find_note_by_subtext('third')}")
-print(f"here is your by tag: {notes.find_notes_by_tag('BBB')}")
-print(notes.show_notes())
+if __name__ == "__main__":
+    notes = Notes()
+    notes.add_note("My first note")
+    notes.add_note("My second note")
+    notes.add_note("My third note")
+    print(notes.show_notes())
+    notes.add_tag(1, "TTT")
+    notes.add_tag(1, "AAA")
+    notes.add_tag(1, "BBB")
+    notes.add_tag(2, "BBB")
+    print(notes.show_notes())
+    notes.remove_tag(1, "TTT")
+    print(notes.show_notes())
+    notes.update_note(1, "additional info")
+    print(notes.show_notes())
+    notes.remove_note(1)
+    # ++
+    print(notes.show_notes())
+    print(notes.show_notes())
+    print(f"here is your note by index: {notes.find_note_by_index(1)}")
+    notes.replace_note(1, "Replaced note")
+    print(f"here is your by text: {notes.find_note_by_subtext('third')}")
+    print(f"here is your by tag: {notes.find_notes_by_tag('BBB')}")
+    print(notes.show_notes())
