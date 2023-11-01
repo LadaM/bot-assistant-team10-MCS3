@@ -14,6 +14,8 @@ COMMANDS: dict = {
     "show-birthday {user}": "shows contact's birthday date",
     "birthdays": "shows birthdays on next week",
     "exit": "enter 'close' or 'exit' to close the assistant",
+    "search-contacts <search_string>": "searches contact's names and phones, outputs contacts matching "
+                                       "the search string (not empty, more than 2 letters)",
 }
 WEEK_DAY_DICT = {
     0: "Monday",

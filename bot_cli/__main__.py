@@ -2,7 +2,7 @@ import os.path
 from address_book_classes import AddressBook
 from constants import FILE_PATH
 from commands import parse_input, add_contact, delete_contact, change_contact, show_phones, show_all, add_birthday, \
-    show_birthday, birthdays, address_book, help
+    show_birthday, birthdays, address_book, help, search_contacts
 from colorama import Fore
 import colorama
 
@@ -54,6 +54,8 @@ def main(address_book):
                 add_birthday(args)
             case "show-birthday":
                 show_birthday(args)
+            case "search-contacts" | "search-contact":
+                search_contacts(args)
             case "birthdays":
                 birthdays(args)
             case "close" | "exit":

@@ -70,6 +70,20 @@ def change_contact_error(func):
     return inner
 
 
+def print_error(msg: str):
+    return print(Fore.RED + msg)
+
+
+def search_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except CommandError:
+            print_error("Invalid search string. Expecting string at least 2 characters long!")
+
+    return inner
+
+
 def show_phones_error(func):
     def inner(args):
         try:
