@@ -47,25 +47,15 @@ class Birthday(Field):
         return datetime.strftime(self.value, '%d.%m.%Y')
 
 class Email(Field):
-    def __init__(self, value):
-        self.__email = None
-        super().__init__(value)
+    def __init__(self, email):
+        if not re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b', email):
+            raise ValueError(
+                f"'{email}' is not valid email address")
+        self.email = email
+        super().__init__(email)
     
-    @property
-    def value(self):
-        return self.__email
-
-    @value.setter
-    def value(self, value):
-        email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
-        regex_search = re.search(email_regex, value)
-        try:
-            self.__email = regex_search.string
-        except AttributeError:
-            self.__email = None
-
     def __str__(self):
-        return str(self.value)
+        return str(self.email)
 
 
 class Record:
@@ -114,7 +104,7 @@ class Record:
 
     def __str__(self):
         birthday_str = f", birthday: {datetime.strftime(self.birthday.value, '%d.%m.%Y')}" if self.birthday is not None else ""
-        email_str = f", email: {self.email.value}" if self.email is not None else ""
+        email_str = f", email: {self.email}" if self.email is not None else ""
         return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}{birthday_str}{email_str}"
 
 class AddressBook(UserDict[str, Record]):
@@ -222,6 +212,7 @@ if __name__ == '__main__':
     john_record.add_phone(Phone("5555555555"))
     print(john_record.get_phones())
     john_record.add_birthday(Birthday("03.11.1984"))
+    john_record.add_email(Email("oo@o.ua"))
 
     # Додавання запису John до адресної книги
     address_book.add_record(john_record)

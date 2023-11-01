@@ -1,7 +1,7 @@
-from address_book_classes import Name, Phone, Birthday, Record, AddressBook
+from address_book_classes import Name, Phone, Birthday, Record, AddressBook, Email
 from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
     contact_not_found_error, add_birthday_error, show_birthday_error, max_period_error, CommandError, \
-    ContactAlreadyExistsError, ContactNotFoundError, search_error
+    ContactAlreadyExistsError, ContactNotFoundError, EmailValidationError, search_error, add_email_error
 import os.path
 import colorama
 from colorama import Fore
@@ -18,7 +18,7 @@ def help():
     Prints out available commands
     prints list of bot commands
     """
-    sorted_commands = dict(sorted(commands.items(), key=lambda item: item[0]))
+    sorted_commands = dict(sorted(COMMANDS.items(), key=lambda item: item[0]))
     formatted_commands = ""
 
     for key, value in sorted_commands.items():
@@ -107,13 +107,9 @@ def add_email(args):
         raise CommandError
     try:
         email = Email(email)
-    except:
-        raise ValueError
-    if email.value is None:
+    except ValueError:
         raise EmailValidationError
-
     if address_book.find(name):
-
         record: Record = address_book.find(name)
         record.add_email(email)
     else:
@@ -302,10 +298,12 @@ def main():
                 print(Fore.BLUE + "How can I help you?")
             case "add":
                 add_contact(args)
+            case "add-email":
+                add_email(args)    
             case "delete":
                 delete_contact(args)
             case "change":
-                change_contact(args)
+                change_phone(args)
             case "phone":
                 show_phones(args)
             case "all":

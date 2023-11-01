@@ -51,7 +51,7 @@ def add_email_error(func):
             return func(args)
         except CommandError:
             print(Fore.RED + "Please use format: add-email {name} {email}")
-        except EmailValidationError:
+        except ValueError:
             print(Fore.RED + "Email address is not valid.")
 
     return inner
