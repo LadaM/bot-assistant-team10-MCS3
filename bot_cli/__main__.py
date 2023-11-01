@@ -1,13 +1,8 @@
 import os.path
-from address_book_classes import AddressBook
-from constants import FILE_PATH
-from commands import parse_input, add_contact, delete_contact, change_contact, show_phones, show_all, add_birthday, \
-    show_birthday, birthdays, address_book, help
-from colorama import Fore
-import colorama
 
-# Initialize colorama
-colorama.init(autoreset=True)
+import commands
+from constants import FILE_PATH
+from print_util import print_error, print_info, print_warn
 
 
 # address_book: AddressBook
@@ -24,44 +19,45 @@ def main(address_book):
     # address_book = AddressBook()
     if os.path.exists(FILE_PATH):
         address_book.load_contacts(FILE_PATH)
-        print(Fore.BLUE +
-              f"Contacts were loaded from '{FILE_PATH}' file")
+        print_info(f"Contacts were loaded from '{FILE_PATH}' file")
     else:
-        print(Fore.BLUE + "New address book was created")
+        print_info("New address book was created")
 
-    print(Fore.YELLOW + "Welcome to the assistant bot!\nEnter a command or 'help' to see available commands.")
+    print_warn("Welcome to the assistant bot!\nEnter a command or 'help' to see available commands.")
 
     while True:
         user_input: str = input("Enter a command: ")
-        command, *args = parse_input(user_input)
+        command, *args = commands.parse_input(user_input)
 
         match command:
             case "help":
-                help()
+                commands.help()
             case "hello":
-                print(Fore.BLUE + "How can I help you?")
-            case "add":
-                add_contact(args)
-            case "delete":
-                delete_contact(args)
-            case "change":
-                change_contact(args)
-            case "phone":
-                show_phones(args)
+                print_info("How can I help you?")
+            case "add-contact":
+                commands.add_contact(args)
+            case "delete-contact":
+                commands.delete_contact(args)
+            case "change-phone":
+                commands.change_phone(args)
+            case "show-phone" | "phone":
+                commands.show_phones(args)
             case "all":
-                show_all()
+                commands.show_all()
             case "add-birthday":
-                add_birthday(args)
+                commands.add_birthday(args)
             case "show-birthday":
-                show_birthday(args)
+                commands.show_birthday(args)
+            case "search-contacts" | "search-contact":
+                commands.search_contacts(args)
             case "birthdays":
-                birthdays(args)
+                commands.birthdays(args)
             case "close" | "exit":
-                print(Fore.MAGENTA + "Good bye!")
+                print_info("Goodbye!")
                 break
             case _:
-                print(Fore.RED + "Invalid command. Please try again")
+                print_error("Invalid command. Please try again")
 
 
 if __name__ == "__main__":
-    main(address_book)
+    main(commands.address_book)
