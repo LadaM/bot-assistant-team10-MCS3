@@ -1,4 +1,4 @@
-from print_util import print_error, print_success
+from print_util import print_error, print_success, print_info, print_warn
 from address_book_classes import Name, Phone, Birthday, Record, AddressBook
 from notes_classes import Notes
 from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
@@ -6,7 +6,8 @@ from error_handlers import add_contact_error, delete_contact_error, change_conta
     ContactAlreadyExistsError, ContactNotFoundError, search_error, note_error_handler
 import colorama
 from colorama import Fore
-from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN
+from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN, TABLE_NOTE_LEN
+import textwrap
 
 # Initialize colorama
 colorama.init(autoreset=True)
@@ -266,3 +267,32 @@ def add_note(notebook: Notes, args):
         raise ValueError(f'Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long')
     note_id, _ = notebook.add_note(text)
     print_success(f"Note with id {note_id} created successfully")
+
+
+@note_error_handler
+def show_note(notebook: Notes, args):
+    try:
+        note_id = int(args[0])
+    except (ValueError, IndexError) as e:
+        raise CommandError("Expecting command in form " + "show-note <note_id>")
+    try:
+        res = notebook.find_note_by_index(note_id)
+        print_info(res.get("Note"))
+    except IndexError:
+        raise ValueError(f"We don't have a note with id {note_id}")
+
+
+@note_error_handler
+def show_all_notes(notebook: Notes):
+    all_notes = notebook.show_notes()
+    if len(all_notes) > 0:
+        ellipsis = '...'
+        index_width = 4
+        print(f"{'id'.upper():<{index_width}} | {'note'.upper():^{TABLE_NOTE_LEN}}")
+        print('-' * (TABLE_NOTE_LEN + index_width + len(ellipsis)))
+        for data in all_notes:
+            index = list(data.keys())[0]
+            note_text = list(data.values())[0].get('Note')
+            print(f"{index:<5}|{textwrap.shorten(note_text, width=TABLE_NOTE_LEN, placeholder=ellipsis)}")
+    else:
+        print_warn("We haven't stored any notes yet.")

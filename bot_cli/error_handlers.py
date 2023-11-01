@@ -86,8 +86,8 @@ def note_error_handler(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except CommandError:
-            print_error("Invalid search string. Expecting string at least 2 characters long!")
+        except CommandError as e:
+            print_error(e.args[0])
         except ValueError as e:
             print_error(e.args[0])
 

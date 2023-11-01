@@ -41,6 +41,10 @@ def main(address_book):
                 commands.add_contact(args)
             case "add-note":
                 commands.add_note(notebook, args)
+            case "show-note":
+                commands.show_note(notebook, args)
+            case "all-notes" | "all-note":
+                commands.show_all_notes(notebook)
             case "delete-contact":
                 commands.delete_contact(args)
             case "change-phone":

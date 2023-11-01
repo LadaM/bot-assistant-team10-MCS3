@@ -109,7 +109,7 @@ class Notes(UserDict):
             tags = [str(tag) for tag in data["tags"]]
             notes.append({index: {"Note": note.capitalize(), "Tags": tags}})
 
-        return str(notes)
+        return notes
 
     def add_tag(self, index, tag):
         self.data["notes"][index - 1]["tags"].append(Tag(tag))
