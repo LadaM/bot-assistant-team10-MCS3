@@ -8,6 +8,7 @@ from notes_classes import Notes
 
 # address_book: AddressBook
 
+
 def main(address_book):
     """
     Assistant bot helps to collect and manage user contacts.
@@ -26,7 +27,9 @@ def main(address_book):
     else:
         print_info("New address book was created")
 
-    print_warn("Welcome to the assistant bot!\nEnter a command or 'help' to see available commands.")
+    print_warn(
+        "Welcome to the assistant bot!\nEnter a command or 'help' to see available commands."
+    )
 
     while True:
         user_input: str = input("Enter a command: ")
@@ -41,6 +44,16 @@ def main(address_book):
                 commands.add_contact(args)
             case "add-note":
                 commands.add_note(notebook, args)
+            case "update-note":
+                commands.update_note(notebook, args)
+            case "replace-note":
+                commands.replace_note(notebook, args)
+            case "remove-note":
+                commands.remove_note(notebook, args)
+            case "find-note":
+                commands.note_by_id(notebook, args)
+            case "note-by-text":
+                commands.note_by_text(notebook, args)
             case "delete-contact":
                 commands.delete_contact(args)
             case "change-phone":

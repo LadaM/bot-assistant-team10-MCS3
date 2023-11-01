@@ -97,7 +97,7 @@ class Notes(UserDict):
         searched_note = []
         for data in self.data["notes"]:
             note = str(data["note"]).casefold()
-            tags = [str(tag).casefold() for tag in data["tags"]]
+            tags = [str(tag) for tag in data["tags"]]
             if sub_text.casefold() in note:
                 searched_note.append({"Note": note.capitalize(), "Tags": tags})
         return searched_note

@@ -1,12 +1,31 @@
-from print_util import print_error, print_success
+from print_util import print_error, print_success, print_info
 from address_book_classes import Name, Phone, Birthday, Record, AddressBook
 from notes_classes import Notes
-from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
-    contact_not_found_error, add_birthday_error, show_birthday_error, max_period_error, CommandError, \
-    ContactAlreadyExistsError, ContactNotFoundError, search_error, note_error_handler
+from error_handlers import (
+    add_contact_error,
+    delete_contact_error,
+    change_contact_error,
+    show_phones_error,
+    contact_not_found_error,
+    add_birthday_error,
+    show_birthday_error,
+    max_period_error,
+    CommandError,
+    ContactAlreadyExistsError,
+    ContactNotFoundError,
+    search_error,
+    note_error_handler,
+)
 import colorama
 from colorama import Fore
-from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN
+from constants import (
+    FILE_PATH,
+    MAX_PERIOD,
+    MIN_PERIOD,
+    DEFAULT_PERIOD,
+    COMMANDS,
+    MIN_NOTE_LEN,
+)
 
 # Initialize colorama
 colorama.init(autoreset=True)
@@ -73,8 +92,7 @@ def add_contact(args: list[str, str]):
         address_book.add_record(record)
 
     address_book.save_contacts(FILE_PATH)
-    print(Fore.GREEN +
-          f"Contact added successfully: {name} {phone}")
+    print(Fore.GREEN + f"Contact added successfully: {name} {phone}")
 
 
 @contact_not_found_error
@@ -125,8 +143,7 @@ def change_phone(args: list[str, str, str]):
             raise KeyError
 
         address_book.save_contacts(FILE_PATH)
-        print(Fore.GREEN +
-              f"Contact '{name}' updated successfully")
+        print(Fore.GREEN + f"Contact '{name}' updated successfully")
     else:
         raise ContactNotFoundError
 
@@ -141,7 +158,7 @@ def search_contacts(args):
             if str(r).casefold().find(search_str) > 0:
                 search_result.append(r)
         if len(search_result) > 0:
-            print('\n'.join([str(r) for r in search_result]))
+            print("\n".join([str(r) for r in search_result]))
         else:
             print("No results found!")
     except (ValueError, IndexError) as e:
@@ -162,7 +179,9 @@ def show_phones(args):
 
     if address_book.find(name):
         print(
-            Fore.GREEN + f"{name.value}: {', '.join(address_book.find(name).get_phones())}")
+            Fore.GREEN
+            + f"{name.value}: {', '.join(address_book.find(name).get_phones())}"
+        )
     else:
         raise ContactNotFoundError
 
@@ -251,18 +270,76 @@ def birthdays(args):
 
     if get_birthdays_per_week:
         result = "Next week birthdays:\n" + "-" * 10 + "\n"
-        result += "\n".join([f"{day}: {celebrate_users}" for day, celebrate_users in get_birthdays_per_week.items()])
+        result += "\n".join(
+            [
+                f"{day}: {celebrate_users}"
+                for day, celebrate_users in get_birthdays_per_week.items()
+            ]
+        )
         result += "\n" + "-" * 10
         print(Fore.YELLOW + result)
     else:
-        print(Fore.YELLOW +
-              "There is no one to celebrate birthday next week")
+        print(Fore.YELLOW + "There is no one to celebrate birthday next week")
 
 
 @note_error_handler
 def add_note(notebook: Notes, args):
-    text = ' '.join(args)
+    text = " ".join(args)
     if text.isspace() or len(text) < MIN_NOTE_LEN:
-        raise ValueError(f'Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long')
+        raise ValueError(
+            f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
+        )
     note_id, _ = notebook.add_note(text)
     print_success(f"Note with id {note_id} created successfully")
+
+
+# command, index, text = args[0], args[1], " ".join(args[2:])
+@note_error_handler
+def update_note(notebook: Notes, args):
+    index, text = args[0], " ".join(args[1:])
+    notebook.update_note(int(index), text)
+    print_success("Note successfully updated")
+
+
+@note_error_handler
+def replace_note(notebook: Notes, args):
+    index, text = args[0], " ".join(args[1:])
+    notebook.replace_note(int(index), text)
+    print_success("Note successfully replaced")
+
+
+@note_error_handler
+def remove_note(notebook: Notes, args):
+    index = args[0]
+    notebook.remove_note(int(index))
+    print_success("Note successfully removed")
+
+
+@note_error_handler
+def note_by_id(notebook: Notes, args):
+    index = args[0]
+    note = notebook.find_note_by_index(int(index))
+    if note["Tags"]:
+        str_tags = " ".join(note["Tags"])
+        print_success(f"Note: {note['Note']}\n Tags:{str_tags}")
+    else:
+        print_success(f"Note: {note['Note']}")
+
+
+@note_error_handler
+def note_by_text(notebook: Notes, args):
+    # find_note_by_subtext
+    text = " ".join(args)
+    notes = notebook.find_note_by_subtext(text)
+    if not notes:
+        print_info("No matches found for: '{text}'")
+    output = []
+    for note in notes:
+        if note["Tags"]:
+            str_tags = " ".join(note["Tags"])
+            note_string = f"Note: {note['Note']}\n Tags:{str_tags}"
+        else:
+            note_string = f"Note: {note['Note']}"
+        output.append(note_string)
+    output_string = "\n".join(output)
+    print_success(output_string)

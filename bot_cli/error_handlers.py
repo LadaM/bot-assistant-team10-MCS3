@@ -37,10 +37,10 @@ def add_contact_error(func):
             print(Fore.RED + "Please use format: add {name} {phone}")
         except ValueError:
             print(
-                Fore.RED + "Phone number doesn't match the format XXXXXXXXXX(10 digits)")
+                Fore.RED + "Phone number doesn't match the format XXXXXXXXXX(10 digits)"
+            )
         except ContactAlreadyExistsError:
-            print(
-                Fore.RED + f"Contact with same name and phone number already exists")
+            print(Fore.RED + f"Contact with same name and phone number already exists")
 
     return inner
 
@@ -60,14 +60,16 @@ def change_contact_error(func):
         try:
             return func(args)
         except CommandError:
-            print(
-                Fore.RED + "Please use format: change {name} {old_phone} {new_phone}")
+            print(Fore.RED + "Please use format: change {name} {old_phone} {new_phone}")
         except ValueError:
             print(
-                Fore.RED + "Phone number doesn't match the format XXXXXXXXXX(10 digits)")
+                Fore.RED + "Phone number doesn't match the format XXXXXXXXXX(10 digits)"
+            )
         except KeyError:
             print(
-                Fore.RED + f"Contact '{args[0].capitalize()}' has not phone number '{args[1]}'")
+                Fore.RED
+                + f"Contact '{args[0].capitalize()}' has not phone number '{args[1]}'"
+            )
 
     return inner
 
@@ -77,7 +79,9 @@ def search_error(func):
         try:
             return func(*args, **kwargs)
         except CommandError:
-            print_error(f"Invalid search string. Expecting string at least {MIN_SEARCH_STR_LEN} characters long!")
+            print_error(
+                f"Invalid search string. Expecting string at least {MIN_SEARCH_STR_LEN} characters long!"
+            )
 
     return inner
 
@@ -87,11 +91,17 @@ def note_error_handler(func):
         try:
             return func(*args, **kwargs)
         except CommandError:
-            print_error("Invalid search string. Expecting string at least 2 characters long!")
+            print_error(
+                "Invalid search string. Expecting string at least 2 characters long!"
+            )
         except ValueError as e:
             print_error(e.args[0])
 
+        except IndexError:
+            print_error("Invalid index.")
+
     return inner
+
 
 def show_phones_error(func):
     def inner(args):
@@ -108,11 +118,11 @@ def add_birthday_error(func):
         try:
             return func(args)
         except CommandError:
-            print(
-                Fore.RED + "Please use format: add-birthday {user} {DD.MM.YYYY}")
+            print(Fore.RED + "Please use format: add-birthday {user} {DD.MM.YYYY}")
         except ValueError:
             print(
-                Fore.RED + f"'{args[1]}' doesn't match the birthday format DD.MM.YYYY")
+                Fore.RED + f"'{args[1]}' doesn't match the birthday format DD.MM.YYYY"
+            )
 
     return inner
 
