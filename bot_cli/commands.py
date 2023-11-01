@@ -234,8 +234,8 @@ def show_all_contacts():
 @max_period_error
 def birthdays(args):
     """
-    Show all birthdays in defined period
-    If period wasn't passed then uses default one = 7 days
+    ...upcoming birthdays...
+    default period is 7 days
     """
     if args:
         try:

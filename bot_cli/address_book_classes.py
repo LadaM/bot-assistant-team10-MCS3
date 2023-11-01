@@ -147,7 +147,7 @@ class AddressBook(UserDict[str, Record]):
             json.dump(self.data, file, default=custom_serializer, indent=4)
 
     def get_birthdays_per_period(self, period: int = 7) -> dict | None:
-        users_to_celebrate = defaultdict(list)
+        upcoming_birthdays = defaultdict(list)
         current_date = datetime.today().date()
 
         for user, record in self.data.items():
@@ -165,8 +165,8 @@ class AddressBook(UserDict[str, Record]):
                 if delta_days < period:
                     day_name = birthday_this_year.strftime('%A')
                     birthday_date = datetime.strftime(birthday_this_year, '%A, %d %B')
-                    users_to_celebrate[birthday_date].append(user)
-        sorted_data = dict(sorted(users_to_celebrate.items()))
+                    upcoming_birthdays[birthday_date].append(user)
+        sorted_data = dict(sorted(upcoming_birthdays.items()))
         return sorted_data
 
 
