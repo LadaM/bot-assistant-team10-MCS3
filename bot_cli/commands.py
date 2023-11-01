@@ -252,9 +252,8 @@ def birthdays(args):
     if get_birthdays_per_period:
         formatted_data = []
 
-        for key, value in get_birthdays_per_period.items():
-            date, day = key
-            formatted_key = f'{date} {day}: {value}'
+        for date, users in get_birthdays_per_period.items():
+            formatted_key = f'{date}: {", ".join(users)}'
             formatted_data.append(formatted_key)
 
         formatted_output = ",\n".join(formatted_data)

@@ -164,8 +164,8 @@ class AddressBook(UserDict[str, Record]):
 
                 if delta_days < period:
                     day_name = birthday_this_year.strftime('%A')
-                    birthday_date = datetime.strftime(birthday, '%d.%m.%Y')
-                    users_to_celebrate[birthday_date, day_name].append(user)
+                    birthday_date = datetime.strftime(birthday_this_year, '%A, %d %B')
+                    users_to_celebrate[birthday_date].append(user)
         sorted_data = dict(sorted(users_to_celebrate.items()))
         return sorted_data
 
