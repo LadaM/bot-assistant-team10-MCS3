@@ -241,7 +241,7 @@ def show_birthday(args):
     print(Fore.GREEN + f"{name} birthday: {birthday}")
 
 
-def show_all():
+def show_all_contacts():
     """
     show all exist contacts
     prints command result
