@@ -7,7 +7,7 @@ Presents an implementation of the final project of the Tier 1 Python course impl
 This app requires:
 
 * Python >= 3.10
-* Additional packages installed (see [Setup](###Setup))
+* Additional packages installed (see [Setup](#setup))
 
 
 ### Setup 
