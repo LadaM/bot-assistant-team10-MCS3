@@ -1,19 +1,12 @@
-from address_book_classes import Name, Phone, Birthday, Record, AddressBook, Email
-from address_book_classes import Name, Phone, Birthday, Record, AddressBook
-from notes_classes import Notes
-from error_handlers import (add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
+from address_book_classes import Name, Phone, Birthday, Record, AddressBook, Email, Address
+from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
     contact_not_found_error, add_birthday_error, show_birthday_error, max_period_error, CommandError, \
-    ContactAlreadyExistsError, ContactNotFoundError, search_error, note_error_handler, EmailValidationError, add_email_error, \
-    search_error, show_email_error)
-import colorama
-from colorama import Fore
-from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN, TABLE_NOTE_LEN
+    ContactAlreadyExistsError, ContactNotFoundError, EmailValidationError, search_error, add_address_error, \
+    show_address_error, add_email_error, show_email_error, note_error_handler
+from notes_classes import Notes
 import textwrap
-from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS
+from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN, TABLE_NOTE_LEN
 from print_util import print_warn, print_info, print_success, print_magenta
-
-# Initialize colorama
-colorama.init(autoreset=True)
 
 address_book = AddressBook()
 
@@ -27,7 +20,7 @@ def help():
     formatted_commands = ""
 
     for key, value in sorted_commands.items():
-        formatted_commands += f">>> {key: <40}: {value: <}\n"
+        formatted_commands += f">>> {key: <45}: {value: <}\n"
 
     print_magenta(formatted_commands)
 
@@ -124,7 +117,7 @@ def add_email(args):
         raise ContactNotFoundError
 
     address_book.save_contacts(FILE_PATH)
-    print(Fore.GREEN + "Email added successfully")
+    print_success("Email added successfully")
 
 
 @show_email_error
@@ -321,6 +314,48 @@ def birthdays(args):
         print_success(result)
     else:
         print_warn(f"There is no one to celebrate birthday for next {period} day(s)")
+
+
+@contact_not_found_error
+@add_address_error
+def add_address(args):
+    """
+    Adds an address to exist contact
+    Replaces the address if it already exists
+    """
+    try:
+        name, *address = args
+        name = Name(name)
+        address = " ".join(address)
+    except:
+        raise CommandError
+
+    record: Record = address_book.find(name)
+    if not record:
+        raise ContactNotFoundError
+    record.add_address(Address(address))
+
+    address_book.save_contacts(FILE_PATH)
+    print_success("Address added successfully")
+
+
+@contact_not_found_error
+@show_address_error
+def show_address(args):
+    try:
+        name = args[0]
+        name = Name(name)
+    except:
+        raise CommandError
+
+    record: Record = address_book.find(name)
+    if not record:
+        raise ContactNotFoundError
+
+    if record.address:
+        print_success(f"{name} address: {record.show_address()}")
+    else:
+        raise ValueError
 
 
 @note_error_handler

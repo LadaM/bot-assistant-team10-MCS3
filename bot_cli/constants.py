@@ -17,7 +17,6 @@ COMMANDS: dict = {
     "delete-note <note_id>": "deletes the note with id",
     "change-phone <user> <old_phone> <new_phone>": "changes existing contact's phone number",
     "change-email <user> <email>": "changes existing contact's email",
-    "change-address <user> <address>": "changes existing contact's address",
     "show-address <user>": "shows contact's birthday date",
     "show-birthday <user>": "shows contact's birthday date",
     "show-email <user>": "shows contact's birthday date",

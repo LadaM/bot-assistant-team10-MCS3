@@ -7,7 +7,7 @@ from constants import FILE_PATH
 
 
 class Field:
-    def __init__(self, value: str):
+    def __init__(self, value):
         self.value = value
 
     def __str__(self):
@@ -16,7 +16,7 @@ class Field:
 
 class Name(Field):
     def __init__(self, value: str):
-        self.__value = value.capitalize()
+        super().__init__(value.capitalize())
 
     @property
     def value(self):
@@ -46,6 +46,7 @@ class Birthday(Field):
     def __str__(self):
         return datetime.strftime(self.value, '%d.%m.%Y')
 
+
 class Email(Field):
     def __init__(self, email):
         if not re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b', email):
@@ -57,11 +58,21 @@ class Email(Field):
     def __str__(self):
         return str(self.email)
 
+
+class Address(Field):
+    def __init__(self, value):
+        if len(value) > 4:
+            super().__init__(value)
+        else:
+            raise ValueError("Address must be at least 5 symbols")
+
+
 class Record:
     def __init__(self, name: Name, phone: Phone = None):
         self.name = name
         self.phones = []
         self.birthday = None
+        self.address = None
         self.email = None
         if phone:
             self.phones.append(phone)
@@ -97,17 +108,24 @@ class Record:
 
     def show_birthday(self):
         return self.birthday
-    
+
     def add_email(self, email: Email):
         self.email = email
+
+    def add_address(self, address: Address):
+        self.address = address
+
+    def show_address(self):
+        return self.address
 
     def show_email(self):
         return self.email
 
     def __str__(self):
+        address_str = f", address: {self.address.value}" if self.address is not None else ""
         birthday_str = f", birthday: {datetime.strftime(self.birthday.value, '%d.%m.%Y')}" if self.birthday is not None else ""
         email_str = f", email: {self.email}" if self.email is not None else ""
-        return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}{birthday_str}{email_str}"
+        return f"Name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}{birthday_str}{email_str}{address_str}"
 
 
 class AddressBook(UserDict[str, Record]):
@@ -139,9 +157,13 @@ class AddressBook(UserDict[str, Record]):
                 birthday = Birthday(record_data['birthday'])
                 record.add_birthday(birthday)
 
+            if record_data["address"]:
+                address = Address(record_data['address'])
+                record.add_address(address)
+
             if record_data['email']:
                 email = Email(record_data['email'])
-                record.add_email(email)    
+                record.add_email(email)
 
             address_book.add_record(record)
 
@@ -160,8 +182,10 @@ class AddressBook(UserDict[str, Record]):
                     return {
                         'name': obj.name.value,
                         'phones': [phone.value for phone in obj.phones],
+                        'birthday': str(obj.birthday) if obj.birthday else None,
+                        'address': obj.address.value if obj.address else None,
                         'email': str(obj.email) if obj.email else None,
-                        'birthday': str(obj.birthday) if obj.birthday else None
+
                     }
                 return obj
 
@@ -251,6 +275,12 @@ if __name__ == '__main__':
 
     # Видалення телефону "5555555555" із запису John
     john_record.remove_phone(Phone("5555555555"))
+
+    # Додавання адреси
+    john_record.add_address(Address("Kyiv city, Khreschatic str, 1"))
+
+    # Виведення адреси по юзеру
+    print(f"John address: {john_record.show_address()}")
 
     print('-' * 10)
 
