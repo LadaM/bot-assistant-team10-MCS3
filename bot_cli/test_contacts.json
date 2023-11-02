@@ -1,0 +1,75 @@
+{
+    "John": {
+      "name": "John",
+      "phones": ["1234567890"],
+      "birthday": "15.10.1985",
+      "address": "123 Main St, Cityville, USA",
+      "email": "john@example.com"
+    },
+    "Jane": {
+      "name": "Jane",
+      "phones": ["9876543210"],
+      "birthday": null,
+      "address": "456 Oak Ave, Townsville, USA",
+      "email": "jane@example.com"
+    },
+    "Bob": {
+      "name": "Bob",
+      "phones": [
+        "5551237890",
+        "3204445551"
+        ],
+      "birthday": "06.11.1978",
+      "address": null,
+      "email": "bob@example.com"
+    },
+    "Alice": {
+      "name": "Alice",
+      "phones": ["4445556666"],
+      "birthday": "03.12.1990",
+      "address": "789 Pine Rd, Villagetown, USA",
+      "email": null
+    },
+    "Chris": {
+      "name": "Chris",
+      "phones": ["1112223333"],
+      "birthday": null,
+      "address": null,
+      "email": "chris@example.com"
+    },
+    "Emily": {
+      "name": "Emily",
+      "phones": ["7778889999"],
+      "birthday": "11.08.1982",
+      "address": "321 Cedar Lane, Hamletville, USA",
+      "email": "emily@example.com"
+    },
+    "David": {
+      "name": "David",
+      "phones": ["9990001111"],
+      "birthday": "08.11.1978",
+      "address": "987 Birch Blvd, Suburbia, USA",
+      "email": null
+    },
+    "Megan": {
+      "name": "Megan",
+      "phones": ["3334445555"],
+      "birthday": "07.04.1975",
+      "address": "654 Elm Street, Ruralville, USA",
+      "email": "megan@example.com"
+    },
+    "Samuel": {
+      "name": "Samuel",
+      "phones": ["6667778888"],
+      "birthday": null,
+      "address": null,
+      "email": "samuel@example.com"
+    },
+    "Laura": {
+      "name": "Laura",
+      "phones": ["2223334444"],
+      "birthday": "30.09.1989",
+      "address": "876 Maple Dr, Cityburg, USA",
+      "email": null
+    }
+}
