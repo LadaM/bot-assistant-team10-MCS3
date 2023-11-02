@@ -28,15 +28,6 @@ COMMANDS: dict = {
                                        "the search string (not empty, more than 2 letters)",
 }
 FILE_PATH = "contacts.json"
-WEEK_DAY_DICT = {
-    0: "Monday",
-    1: "Tuesday",
-    2: "Wednesday",
-    3: "Thursday",
-    4: "Friday",
-    5: "Saturday",
-    6: "Sunday",
-}
 
 MIN_NOTE_LEN = 2
 TABLE_NOTE_LEN = 75
