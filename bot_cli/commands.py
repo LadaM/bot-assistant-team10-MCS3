@@ -321,6 +321,10 @@ def birthdays(args):
 @contact_not_found_error
 @add_address_error
 def add_address(args):
+    """
+    Adds an address to exist contact
+    Replaces the address if it already exists
+    """
     try:
         name, *address = args
         name = Name(name)
@@ -328,11 +332,10 @@ def add_address(args):
     except:
         raise CommandError
 
-    if address_book.find(name):
-        record: Record = address_book.find(name)
-        record.add_address(Address(address))
-    else:
+    record: Record = address_book.find(name)
+    if not record:
         raise ContactNotFoundError
+    record.add_address(Address(address))
 
     address_book.save_contacts(FILE_PATH)
     print_success("Address added successfully")
@@ -347,9 +350,8 @@ def show_address(args):
     except:
         raise CommandError
 
-    if address_book.find(name):
-        record: Record = address_book.find(name)
-    else:
+    record: Record = address_book.find(name)
+    if not record:
         raise ContactNotFoundError
 
     if record.address:
