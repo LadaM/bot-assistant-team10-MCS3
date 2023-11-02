@@ -35,6 +35,9 @@ Notes(UserDict) - звичайний словни вигляд матиме та
 
 from collections import UserDict
 from address_book_classes import Field
+from constants import FILE_PATH_NOTES
+import os
+import json
 
 
 class Note(Field):
@@ -53,7 +56,6 @@ class Note(Field):
 class Tag(Field):
     def __init__(self, value):
         super().__init__(value)
-        self.__value = value
 
     @property
     def value(self):
@@ -85,7 +87,7 @@ class Notes(UserDict):
         current_note = self.find_note_by_index(index)
         current_note_text = str(current_note["Note"])
         update_note_text = current_note_text + "; " + add_note_text
-        self.replace_note(index, update_note_text)
+        self.change_note(index, update_note_text)
 
     def find_note_by_index(self, index):
         data = self.data["notes"][index - 1]
@@ -131,6 +133,36 @@ class Notes(UserDict):
     def change_tag(self):
         pass  # зробити редагування конретного тега? не впевнений шо треба
 
+    def to_json(self):
+        serialized_data = {
+            "notes": [{"note": str(data["note"].value), "tags": [str(tag.value) for tag in data["tags"]]} for data in
+                      self.data["notes"]]
+        }
+        return serialized_data
+
+    @classmethod
+    def from_json(cls, data):
+        notes_instance = cls()
+        notes_instance.data = {"notes": []}
+
+        for note_data in data:
+            note_value = note_data["note"]
+            tags = note_data["tags"]
+            notes_instance.data["notes"].append({"note": Note(note_value), "tags": [Tag(tag) for tag in tags]})
+
+        return notes_instance
+
+    def save_notes(self, path):
+        serialized_data = self.to_json()
+        with open(path, "w") as file:
+            json.dump(serialized_data["notes"], file, indent=4)
+
+    def load_notes(self, path):
+        with open(path, "r") as file:
+            data = json.load(file)
+            notes = Notes.from_json(data)
+            self.data = notes.data
+
     def __str__(self):
         notes = []
         for index, note in enumerate(self.data["notes"]):
@@ -158,7 +190,14 @@ if __name__ == "__main__":
     print(notes.show_notes())
     print(notes.show_notes())
     print(f"here is your note by index: {notes.find_note_by_index(1)}")
-    notes.replace_note(1, "Replaced note")
+    notes.change_note(1, "Replaced note")
     print(f"here is your by text: {notes.find_note_by_subtext('third')}")
     print(f"here is your by tag: {notes.find_notes_by_tag('BBB')}")
-    print(notes.show_notes())
+    notes.add_tag(1, "DDD")
+    print(f"Old notes:\n{notes.show_notes()}")
+    print("Save notes to json file")
+    notes.save_notes(FILE_PATH_NOTES)
+    print("Load notes from json file")
+    notes.load_notes(FILE_PATH_NOTES)
+    print(f"New notes:\n{notes.show_notes()}")
+
