@@ -6,9 +6,6 @@ from print_util import print_error, print_info, print_warn
 from notes_classes import Notes
 
 
-# address_book: AddressBook
-
-
 def main(address_book):
     """
     Assistant bot helps to collect and manage user contacts.
@@ -42,6 +39,7 @@ def main(address_book):
                 print_info("How can I help you?")
             case "add-contact":
                 commands.add_contact(args)
+
             case "add-note":
                 commands.add_note(notebook, args)
             case "change-note":
@@ -50,6 +48,18 @@ def main(address_book):
                 commands.remove_note(notebook, args)
             case "search-note":
                 commands.search_note(notebook, args)
+            case "add-address":
+                commands.add_address(args)
+            case "show-address":
+                commands.show_address(args)
+            case "add-email":
+                commands.add_email(args)
+            case "show-email":
+                commands.show_email(args)
+            case "show-note":
+                commands.show_note(notebook, args)
+            case "all-notes" | "all-note":
+                commands.show_all_notes(notebook)
             case "delete-contact":
                 commands.delete_contact(args)
             case "change-phone":
