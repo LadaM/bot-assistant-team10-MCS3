@@ -293,18 +293,10 @@ def add_note(notebook: Notes, args):
     print_success(f"Note with id {note_id} created successfully")
 
 
-# command, index, text = args[0], args[1], " ".join(args[2:])
 @note_error_handler
-def update_note(notebook: Notes, args):
+def change_note(notebook: Notes, args):
     index, text = args[0], " ".join(args[1:])
-    notebook.update_note(int(index), text)
-    print_success("Note successfully updated")
-
-
-@note_error_handler
-def replace_note(notebook: Notes, args):
-    index, text = args[0], " ".join(args[1:])
-    notebook.replace_note(int(index), text)
+    notebook.change_note(int(index), text)
     print_success("Note successfully replaced")
 
 
@@ -316,21 +308,14 @@ def remove_note(notebook: Notes, args):
 
 
 @note_error_handler
-def note_by_id(notebook: Notes, args):
-    index = args[0]
-    note = notebook.find_note_by_index(int(index))
-    if note["Tags"]:
-        str_tags = " ".join(note["Tags"])
-        print_success(f"Note: {note['Note']}\n Tags:{str_tags}")
-    else:
-        print_success(f"Note: {note['Note']}")
-
-
-@note_error_handler
-def note_by_text(notebook: Notes, args):
+def search_note(notebook: Notes, args):
     # find_note_by_subtext
     text = " ".join(args)
     notes = notebook.find_note_by_subtext(text)
+    if text.isspace() or len(text) < MIN_NOTE_LEN:
+        raise ValueError(
+            f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
+        )
     if not notes:
         print_info("No matches found for: '{text}'")
     output = []

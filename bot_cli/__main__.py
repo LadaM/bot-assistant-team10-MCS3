@@ -44,16 +44,12 @@ def main(address_book):
                 commands.add_contact(args)
             case "add-note":
                 commands.add_note(notebook, args)
-            case "update-note":
-                commands.update_note(notebook, args)
-            case "replace-note":
-                commands.replace_note(notebook, args)
+            case "change-note":
+                commands.change_note(notebook, args)
             case "remove-note":
                 commands.remove_note(notebook, args)
-            case "find-note":
-                commands.note_by_id(notebook, args)
-            case "note-by-text":
-                commands.note_by_text(notebook, args)
+            case "search-note":
+                commands.search_note(notebook, args)
             case "delete-contact":
                 commands.delete_contact(args)
             case "change-phone":
