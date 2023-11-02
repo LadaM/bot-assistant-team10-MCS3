@@ -16,14 +16,14 @@ This app requires:
 ```shell
 git clone git@github.com:LadaM/bot-assistant-team10.git
 cd bot-assistant-team10
-pip3 install -t requirements.txt 
+pip3 install -r requirements.txt 
 ```
 
 #### Windows
 ```shell
 git clone git@github.com:LadaM/bot-assistant-team10.git
 dir bot-assistant-team10
-pip3 install -t requirements.txt 
+pip3 install -r requirements.txt 
 ```
 
 ### Usage
@@ -43,6 +43,7 @@ python3 __main__.py
 ```
 
 ### Functionality of the CLI
+
 The command should start with the listed string and provide a correct number of valid arguments to be interpreted correctly. Otherwise, error message will be shown.
 
 | Command                                           | Description                                                                                                                                                                                                                |
