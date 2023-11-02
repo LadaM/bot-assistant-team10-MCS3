@@ -80,7 +80,7 @@ class Notes(UserDict):
     def remove_note(self, index):
         del self.data["notes"][index - 1]
 
-    def replace_note(self, index, new_note):
+    def change_note(self, index, new_note):
         self.data["notes"][index - 1]["note"] = Note(new_note)
 
     def update_note(self, index, add_note_text):
@@ -99,7 +99,7 @@ class Notes(UserDict):
         searched_note = []
         for data in self.data["notes"]:
             note = str(data["note"]).casefold()
-            tags = [str(tag).casefold() for tag in data["tags"]]
+            tags = [str(tag) for tag in data["tags"]]
             if sub_text.casefold() in note:
                 searched_note.append({"Note": note.capitalize(), "Tags": tags})
         return searched_note

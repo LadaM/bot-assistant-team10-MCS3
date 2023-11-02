@@ -308,7 +308,6 @@ def birthdays(args):
             formatted_data.append(formatted_key)
 
         formatted_output = ",\n".join(formatted_data)
-
         result = f"Birthdays for next {period} day(s):\n" + "-" * 10 + "\n"
         result += formatted_output
         result += "\n" + "-" * 10
@@ -394,4 +393,52 @@ def show_all_notes(notebook: Notes):
             note_text = list(data.values())[0].get('Note')
             print(f"{index:<5}|{textwrap.shorten(note_text, width=TABLE_NOTE_LEN, placeholder=ellipsis)}")
     else:
-        print_warn("We haven't stored any notes yet.")
+         print_warn("We haven't stored any notes yet.")
+
+@note_error_handler
+def add_note(notebook: Notes, args):
+    text = " ".join(args)
+    if text.isspace() or len(text) < MIN_NOTE_LEN:
+        raise ValueError(
+            f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
+        )
+    note_id, _ = notebook.add_note(text)
+    print_success(f"Note with id {note_id} created successfully")
+
+
+@note_error_handler
+def change_note(notebook: Notes, args):
+    index, text = args[0], " ".join(args[1:])
+    notebook.change_note(int(index), text)
+    print_success("Note successfully replaced")
+
+
+@note_error_handler
+def remove_note(notebook: Notes, args):
+    index = args[0]
+    notebook.remove_note(int(index))
+    print_success("Note successfully removed")
+
+
+@note_error_handler
+def search_note(notebook: Notes, args):
+    # find_note_by_subtext
+    text = " ".join(args)
+    notes = notebook.find_note_by_subtext(text)
+    if text.isspace() or len(text) < MIN_NOTE_LEN:
+        raise ValueError(
+            f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
+        )
+    if not notes:
+        print_info("No matches found for: '{text}'")
+    output = []
+    for note in notes:
+        if note["Tags"]:
+            str_tags = " ".join(note["Tags"])
+            note_string = f"Note: {note['Note']}\n Tags:{str_tags}"
+        else:
+            note_string = f"Note: {note['Note']}"
+        output.append(note_string)
+    output_string = "\n".join(output)
+    print_success(output_string)
+
