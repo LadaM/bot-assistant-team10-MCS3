@@ -87,7 +87,7 @@ class Notes(UserDict):
         current_note = self.find_note_by_index(index)
         current_note_text = str(current_note["Note"])
         update_note_text = current_note_text + "; " + add_note_text
-        self.replace_note(index, update_note_text)
+        self.change_note(index, update_note_text)
 
     def find_note_by_index(self, index):
         data = self.data["notes"][index - 1]
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     print(notes.show_notes())
     print(notes.show_notes())
     print(f"here is your note by index: {notes.find_note_by_index(1)}")
-    notes.replace_note(1, "Replaced note")
+    notes.change_note(1, "Replaced note")
     print(f"here is your by text: {notes.find_note_by_subtext('third')}")
     print(f"here is your by tag: {notes.find_notes_by_tag('BBB')}")
     notes.add_tag(1, "DDD")
