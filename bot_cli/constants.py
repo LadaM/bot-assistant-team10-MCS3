@@ -27,3 +27,7 @@ COMMANDS: dict = {
                                        "the search string (not empty, more than 2 letters)",
 }
 FILE_PATH = "contacts.json"
+
+MIN_NOTE_LEN = 2
+TABLE_NOTE_LEN = 75
+MIN_SEARCH_STR_LEN = 2

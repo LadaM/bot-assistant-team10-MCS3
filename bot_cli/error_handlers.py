@@ -1,4 +1,5 @@
 from print_util import print_error
+from constants import MIN_SEARCH_STR_LEN
 
 
 class ContactNotFoundError(Exception):
@@ -70,10 +71,21 @@ def search_error(func):
         try:
             return func(*args, **kwargs)
         except CommandError:
-            print_error("Invalid search string. Expecting string at least 2 characters long!")
+            print_error(f"Invalid search string. Expecting string at least {MIN_SEARCH_STR_LEN} characters long!")
 
     return inner
 
+
+def note_error_handler(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except CommandError as e:
+            print_error(e.args[0])
+        except ValueError as e:
+            print_error(e.args[0])
+
+    return inner
 
 def show_phones_error(func):
     def inner(args):

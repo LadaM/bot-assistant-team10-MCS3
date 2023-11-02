@@ -39,7 +39,7 @@ from address_book_classes import Field
 
 class Note(Field):
     def __init__(self, value):
-        self.__value = value
+        super().__init__(value)
 
     @property
     def value(self):
@@ -52,6 +52,7 @@ class Note(Field):
 
 class Tag(Field):
     def __init__(self, value):
+        super().__init__(value)
         self.__value = value
 
     @property
@@ -65,10 +66,14 @@ class Tag(Field):
 
 class Notes(UserDict):
     def __init__(self):
+        super().__init__()
         self.data = {"notes": []}
 
     def add_note(self, note):
-        self.data["notes"].append({"note": Note(note), "tags": []})
+        notes_ = self.data["notes"]
+        n = Note(note)
+        notes_.append({"note": n, "tags": []})
+        return len(notes_), n
 
     def remove_note(self, index):
         del self.data["notes"][index - 1]
@@ -104,7 +109,7 @@ class Notes(UserDict):
             tags = [str(tag) for tag in data["tags"]]
             notes.append({index: {"Note": note.capitalize(), "Tags": tags}})
 
-        return str(notes)
+        return notes
 
     def add_tag(self, index, tag):
         self.data["notes"][index - 1]["tags"].append(Tag(tag))
