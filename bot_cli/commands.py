@@ -4,13 +4,9 @@ from error_handlers import add_contact_error, delete_contact_error, change_conta
     ContactAlreadyExistsError, ContactNotFoundError, EmailValidationError, search_error, add_address_error, \
     show_address_error, add_email_error, show_email_error, note_error_handler
 from notes_classes import Notes
-import colorama
 import textwrap
 from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN, TABLE_NOTE_LEN
 from print_util import print_warn, print_info, print_success, print_magenta
-
-# Initialize colorama
-colorama.init(autoreset=True)
 
 address_book = AddressBook()
 
