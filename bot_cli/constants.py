@@ -26,7 +26,8 @@ COMMANDS: dict = {
     "search-contacts <search_string>": "searches contact's names and phones, outputs contacts matching "
                                        "the search string (not empty, more than 2 letters)",
 }
-FILE_PATH = "contacts.json"
+FILE_PATH_CONTACTS = "contacts.json"
+FILE_PATH_NOTES = "notes.json"
 
 MIN_NOTE_LEN = 2
 TABLE_NOTE_LEN = 75

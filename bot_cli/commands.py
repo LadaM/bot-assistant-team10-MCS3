@@ -5,10 +5,11 @@ from error_handlers import add_contact_error, delete_contact_error, change_conta
     show_address_error, add_email_error, show_email_error, note_error_handler
 from notes_classes import Notes
 import textwrap
-from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN, TABLE_NOTE_LEN
+from constants import FILE_PATH_CONTACTS, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN, TABLE_NOTE_LEN
 from print_util import print_warn, print_info, print_success, print_magenta
 
 address_book = AddressBook()
+notebook = Notes()
 
 
 def help():
@@ -69,7 +70,7 @@ def add_contact(args: list[str, str]):
         record: Record = Record(name, phone)
         address_book.add_record(record)
 
-    address_book.save_contacts(FILE_PATH)
+    address_book.save_contacts(FILE_PATH_CONTACTS)
     print_success(f"Contact added successfully: {name} {phone}")
 
 
@@ -90,7 +91,7 @@ def delete_contact(args):
     else:
         raise ContactNotFoundError
 
-    address_book.save_contacts(FILE_PATH)
+    address_book.save_contacts(FILE_PATH_CONTACTS)
     print_success(f"Contact '{name}' deleted successfully")
 
 
@@ -116,7 +117,7 @@ def add_email(args):
     else:
         raise ContactNotFoundError
 
-    address_book.save_contacts(FILE_PATH)
+    address_book.save_contacts(FILE_PATH_CONTACTS)
     print_success("Email added successfully")
 
 
@@ -172,7 +173,7 @@ def change_phone(args: list[str, str, str]):
         else:
             raise KeyError
 
-        address_book.save_contacts(FILE_PATH)
+        address_book.save_contacts(FILE_PATH_CONTACTS)
         print_success(f"Contact '{name}' updated successfully")
     else:
         raise ContactNotFoundError
@@ -237,7 +238,7 @@ def add_birthday(args):
     else:
         raise ContactNotFoundError
 
-    address_book.save_contacts(FILE_PATH)
+    address_book.save_contacts(FILE_PATH_CONTACTS)
     print_success("Birthday added successfully")
 
 
@@ -335,7 +336,7 @@ def add_address(args):
         raise ContactNotFoundError
     record.add_address(Address(address))
 
-    address_book.save_contacts(FILE_PATH)
+    address_book.save_contacts(FILE_PATH_CONTACTS)
     print_success("Address added successfully")
 
 

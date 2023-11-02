@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 import os.path
 from collections import defaultdict, UserDict
-from constants import FILE_PATH
+from constants import FILE_PATH_CONTACTS
 
 
 class Field:
@@ -219,9 +219,9 @@ if __name__ == '__main__':
     # Створення нової адресної книги
     address_book = AddressBook()
 
-    if os.path.exists(FILE_PATH):
-        address_book.load_contacts(FILE_PATH)
-        print(f"Contacts were loaded from '{FILE_PATH}' file")
+    if os.path.exists(FILE_PATH_CONTACTS):
+        address_book.load_contacts(FILE_PATH_CONTACTS)
+        print(f"Contacts were loaded from '{FILE_PATH_CONTACTS}' file")
     else:
         print("New address book was created")
 
@@ -292,4 +292,4 @@ if __name__ == '__main__':
     print(address_book.get_birthdays_per_period())
 
     # Save data into JSON file
-    address_book.save_contacts(FILE_PATH)
+    address_book.save_contacts(FILE_PATH_CONTACTS)

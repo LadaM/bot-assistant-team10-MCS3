@@ -1,28 +1,28 @@
 import os.path
 
 import commands
-from constants import FILE_PATH
+from constants import FILE_PATH_CONTACTS, FILE_PATH_NOTES
 from print_util import print_error, print_info, print_warn
-from notes_classes import Notes
 
 
-def main(address_book):
+def main(address_book, notebook):
     """
     Assistant bot helps to collect and manage user contacts.
 
     To see available commands enter 'help' command
     """
-    # notebook that holds all the notes that are stored so far
-    notebook = Notes()
-    # TODO when JSON serialization is ready, import existing notes
-    # global address_book
-    # create a new address book or load daya from a file
-    # address_book = AddressBook()
-    if os.path.exists(FILE_PATH):
-        address_book.load_contacts(FILE_PATH)
-        print_info(f"Contacts were loaded from '{FILE_PATH}' file")
+
+    if os.path.exists(FILE_PATH_CONTACTS):
+        address_book.load_contacts(FILE_PATH_CONTACTS)
+        print_info(f"Contacts were loaded from '{FILE_PATH_CONTACTS}' file")
     else:
         print_info("New address book was created")
+
+    if os.path.exists(FILE_PATH_NOTES):
+        notebook.load_notes(FILE_PATH_NOTES)
+        print_info(f"Notes were loaded from '{FILE_PATH_NOTES}' file")
+    else:
+        print_info("New notebook was created")
 
     print_warn("Welcome to the assistant bot!\nEnter a command or 'help' to see available commands.")
 
@@ -75,4 +75,4 @@ def main(address_book):
 
 
 if __name__ == "__main__":
-    main(commands.address_book)
+    main(commands.address_book, commands.notebook)

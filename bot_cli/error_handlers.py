@@ -87,6 +87,7 @@ def note_error_handler(func):
 
     return inner
 
+
 def show_phones_error(func):
     def inner(args):
         try:
