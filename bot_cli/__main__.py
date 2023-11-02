@@ -24,7 +24,9 @@ def main(address_book):
     else:
         print_info("New address book was created")
 
-    print_warn("Welcome to the assistant bot!\nEnter a command or 'help' to see available commands.")
+    print_warn(
+        "Welcome to the assistant bot!\nEnter a command or 'help' to see available commands."
+    )
 
     while True:
         user_input: str = input("Enter a command: ")
@@ -37,6 +39,15 @@ def main(address_book):
                 print_info("How can I help you?")
             case "add-contact":
                 commands.add_contact(args)
+
+            case "add-note":
+                commands.add_note(notebook, args)
+            case "change-note":
+                commands.change_note(notebook, args)
+            case "remove-note":
+                commands.remove_note(notebook, args)
+            case "search-note":
+                commands.search_note(notebook, args)
             case "add-address":
                 commands.add_address(args)
             case "show-address":
@@ -45,8 +56,6 @@ def main(address_book):
                 commands.add_email(args)
             case "show-email":
                 commands.show_email(args)
-            case "add-note":
-                commands.add_note(notebook, args)
             case "show-note":
                 commands.show_note(notebook, args)
             case "all-notes" | "all-note":

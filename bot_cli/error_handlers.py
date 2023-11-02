@@ -1,6 +1,10 @@
 from print_util import print_error
 from constants import MIN_SEARCH_STR_LEN
 
+# Initialize colorama
+colorama.init(autoreset=True) # перевірити чи треба чи треба
+
+
 
 class ContactNotFoundError(Exception):
     pass
@@ -73,6 +77,7 @@ def search_error(func):
         except CommandError:
             print_error(f"Invalid search string. Expecting string at least {MIN_SEARCH_STR_LEN} characters long!")
 
+
     return inner
 
 
@@ -84,7 +89,8 @@ def note_error_handler(func):
             print_error(e.args[0])
         except ValueError as e:
             print_error(e.args[0])
-
+        except IndexError:
+            print_error("Invalid index.")
     return inner
 
 def show_phones_error(func):
@@ -105,7 +111,6 @@ def add_birthday_error(func):
             print_error("Please use format: add-birthday {user} {DD.MM.YYYY}")
         except ValueError:
             print_error(f"'{args[1]}' doesn't match the birthday format DD.MM.YYYY")
-
     return inner
 
 

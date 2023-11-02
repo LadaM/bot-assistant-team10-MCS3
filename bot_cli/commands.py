@@ -1,12 +1,19 @@
+
+from print_util import print_warn, print_info, print_success, print_magenta
 from address_book_classes import Name, Phone, Birthday, Record, AddressBook, Email, Address
+from notes_classes import Notes
 from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
     contact_not_found_error, add_birthday_error, show_birthday_error, max_period_error, CommandError, \
     ContactAlreadyExistsError, ContactNotFoundError, EmailValidationError, search_error, add_address_error, \
     show_address_error, add_email_error, show_email_error, note_error_handler
-from notes_classes import Notes
+import colorama
 import textwrap
+from colorama import Fore
 from constants import FILE_PATH, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN, TABLE_NOTE_LEN
-from print_util import print_warn, print_info, print_success, print_magenta
+
+colorama.init(autoreset=True)
+
+
 
 address_book = AddressBook()
 
@@ -71,6 +78,7 @@ def add_contact(args: list[str, str]):
 
     address_book.save_contacts(FILE_PATH)
     print_success(f"Contact added successfully: {name} {phone}")
+
 
 
 @contact_not_found_error
@@ -173,7 +181,9 @@ def change_phone(args: list[str, str, str]):
             raise KeyError
 
         address_book.save_contacts(FILE_PATH)
+
         print_success(f"Contact '{name}' updated successfully")
+
     else:
         raise ContactNotFoundError
 
@@ -189,6 +199,7 @@ def search_contacts(args):
                 search_result.append(r)
         if len(search_result) > 0:
             print_success('\n'.join([str(r) for r in search_result]))
+
         else:
             print_warn("No results found!")
     except (ValueError, IndexError) as e:
@@ -209,6 +220,7 @@ def show_phones(args):
 
     if address_book.find(name):
         print_success(f"{name.value}: {', '.join(address_book.find(name).get_phones())}")
+
     else:
         raise ContactNotFoundError
 
@@ -307,7 +319,6 @@ def birthdays(args):
             formatted_data.append(formatted_key)
 
         formatted_output = ",\n".join(formatted_data)
-
         result = f"Birthdays for next {period} day(s):\n" + "-" * 10 + "\n"
         result += formatted_output
         result += "\n" + "-" * 10
@@ -393,4 +404,52 @@ def show_all_notes(notebook: Notes):
             note_text = list(data.values())[0].get('Note')
             print(f"{index:<5}|{textwrap.shorten(note_text, width=TABLE_NOTE_LEN, placeholder=ellipsis)}")
     else:
-        print_warn("We haven't stored any notes yet.")
+         print_warn("We haven't stored any notes yet.")
+
+@note_error_handler
+def add_note(notebook: Notes, args):
+    text = " ".join(args)
+    if text.isspace() or len(text) < MIN_NOTE_LEN:
+        raise ValueError(
+            f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
+        )
+    note_id, _ = notebook.add_note(text)
+    print_success(f"Note with id {note_id} created successfully")
+
+
+@note_error_handler
+def change_note(notebook: Notes, args):
+    index, text = args[0], " ".join(args[1:])
+    notebook.change_note(int(index), text)
+    print_success("Note successfully replaced")
+
+
+@note_error_handler
+def remove_note(notebook: Notes, args):
+    index = args[0]
+    notebook.remove_note(int(index))
+    print_success("Note successfully removed")
+
+
+@note_error_handler
+def search_note(notebook: Notes, args):
+    # find_note_by_subtext
+    text = " ".join(args)
+    notes = notebook.find_note_by_subtext(text)
+    if text.isspace() or len(text) < MIN_NOTE_LEN:
+        raise ValueError(
+            f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
+        )
+    if not notes:
+        print_info("No matches found for: '{text}'")
+    output = []
+    for note in notes:
+        if note["Tags"]:
+            str_tags = " ".join(note["Tags"])
+            note_string = f"Note: {note['Note']}\n Tags:{str_tags}"
+        else:
+            note_string = f"Note: {note['Note']}"
+        output.append(note_string)
+    output_string = "\n".join(output)
+    print_success(output_string)
+
