@@ -165,7 +165,7 @@ cython_debug/
 /.idea/modules.xml
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/vcs.xml
-/bot_cli/contacts.json
+#/bot_cli/contacts.json
 
 #add IDE
 .vscode
