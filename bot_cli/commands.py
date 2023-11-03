@@ -40,7 +40,7 @@ from constants import (
     TABLE_NOTE_LEN,
     COMMAND_LOOKUP,
 )
-from print_util import print_warn, print_info, print_success, print_magenta, print_error
+from print_util import print_warn, print_info, print_success, print_magenta
 
 address_book = AddressBook()
 notebook = Notes()
@@ -491,7 +491,7 @@ def search_note(notebook: Notes, args):
             f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
         )
     if not notes:
-        print_error(f"No matches found for: '{text}'")
+        print_warn(f"No matches found for: '{text}'")
     output = []
     for note in notes:
         if note["Tags"]:
