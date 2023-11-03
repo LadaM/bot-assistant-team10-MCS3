@@ -41,7 +41,7 @@ def main(address_book, notebook):
                 commands.add_note(notebook, args)
             case "change-note":
                 commands.change_note(notebook, args)
-            case "remove-note":
+            case "delete-note":
                 commands.remove_note(notebook, args)
             case "search-note":
                 commands.search_note(notebook, args)
