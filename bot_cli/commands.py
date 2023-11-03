@@ -7,7 +7,7 @@ from address_book_classes import (
     Email,
     Address,
 )
-from bot_cli.print_util import print_error
+
 from error_handlers import (
     add_contact_error,
     delete_contact_error,
@@ -41,7 +41,7 @@ from constants import (
     TABLE_NOTE_LEN,
     COMMAND_LOOKUP,
 )
-from print_util import print_warn, print_info, print_success, print_magenta
+from print_util import print_warn, print_info, print_success, print_magenta, print_error
 
 address_book = AddressBook()
 notebook = Notes()
