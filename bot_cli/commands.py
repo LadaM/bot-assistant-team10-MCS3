@@ -26,6 +26,14 @@ def help():
     print_magenta(formatted_commands)
 
 
+def get_matching_commands(command):
+    matching_commands = []
+    for c in COMMANDS.keys():
+        if c.find(command) >= 0:
+            matching_commands.append(">>> " + c)
+    return matching_commands
+
+
 def parse_input(user_input: str):
     """
     Parse input command
