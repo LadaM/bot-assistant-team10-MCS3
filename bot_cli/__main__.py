@@ -37,7 +37,6 @@ def main(address_book, notebook):
                 print_info("How can I help you?")
             case "add-contact":
                 commands.add_contact(args)
-
             case "add-note":
                 commands.add_note(notebook, args)
             case "change-note":

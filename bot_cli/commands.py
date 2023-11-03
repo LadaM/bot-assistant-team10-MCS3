@@ -5,7 +5,8 @@ from error_handlers import add_contact_error, delete_contact_error, change_conta
     show_address_error, add_email_error, show_email_error, note_error_handler
 from notes_classes import Notes
 import textwrap
-from constants import FILE_PATH_CONTACTS, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, MIN_NOTE_LEN, TABLE_NOTE_LEN
+from constants import FILE_PATH_CONTACTS, FILE_PATH_NOTES, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, \
+    MIN_NOTE_LEN, TABLE_NOTE_LEN
 from print_util import print_warn, print_info, print_success, print_magenta
 
 address_book = AddressBook()
@@ -218,7 +219,8 @@ def show_phones(args):
 @add_birthday_error
 def add_birthday(args):
     """
-    add birthday to exist contact
+    adds birthday to exist contact
+    replaces birthday if already exist
     prints command result
     """
     try:
@@ -364,6 +366,7 @@ def add_note(notebook: Notes, args):
     if text.isspace() or len(text) < MIN_NOTE_LEN:
         raise ValueError(f'Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long')
     note_id, _ = notebook.add_note(text)
+    notebook.save_notes(FILE_PATH_NOTES)
     print_success(f"Note with id {note_id} created successfully")
 
 
@@ -393,23 +396,14 @@ def show_all_notes(notebook: Notes):
             note_text = list(data.values())[0].get('Note')
             print(f"{index:<5}|{textwrap.shorten(note_text, width=TABLE_NOTE_LEN, placeholder=ellipsis)}")
     else:
-         print_warn("We haven't stored any notes yet.")
-
-@note_error_handler
-def add_note(notebook: Notes, args):
-    text = " ".join(args)
-    if text.isspace() or len(text) < MIN_NOTE_LEN:
-        raise ValueError(
-            f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
-        )
-    note_id, _ = notebook.add_note(text)
-    print_success(f"Note with id {note_id} created successfully")
+        print_warn("We haven't stored any notes yet.")
 
 
 @note_error_handler
 def change_note(notebook: Notes, args):
     index, text = args[0], " ".join(args[1:])
     notebook.change_note(int(index), text)
+    notebook.save_notes(FILE_PATH_NOTES)
     print_success("Note successfully replaced")
 
 
@@ -417,6 +411,7 @@ def change_note(notebook: Notes, args):
 def remove_note(notebook: Notes, args):
     index = args[0]
     notebook.remove_note(int(index))
+    notebook.save_notes(FILE_PATH_NOTES)
     print_success("Note successfully removed")
 
 
@@ -441,4 +436,3 @@ def search_note(notebook: Notes, args):
         output.append(note_string)
     output_string = "\n".join(output)
     print_success(output_string)
-
