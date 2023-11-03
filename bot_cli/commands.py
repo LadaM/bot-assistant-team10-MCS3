@@ -426,7 +426,11 @@ def show_note(notebook: Notes, args):
         )
     try:
         res = notebook.find_note_by_index(note_id)
-        print_info(res.get("Note"))
+        if res.get("Tags") == []:
+            print_info(res.get("Note"))
+        else:
+            tags = ",".join(res.get("Tags"))
+            print_info(f'Note: {res.get("Note")}\nTags: {tags}')
     except IndexError:
         raise ValueError(f"We don't have a note with id {note_id}")
 

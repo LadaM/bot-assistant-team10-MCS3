@@ -10,5 +10,13 @@
     {
         "note": "My third note",
         "tags": []
+    },
+    {
+        "note": "very long note very long note vrylong note very long note",
+        "tags": []
+    },
+    {
+        "note": "very long note very long note vrylong note very long note very long very long very long",
+        "tags": []
     }
 ]
