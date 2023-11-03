@@ -109,7 +109,7 @@ class Notes(UserDict):
         for index, data in enumerate(self.data["notes"]):
             note = str(data["note"])
             tags = [str(tag) for tag in data["tags"]]
-            notes.append({index: {"Note": note.capitalize(), "Tags": tags}})
+            notes.append({index+1: {"Note": note.capitalize(), "Tags": tags}})
 
         return notes
 
