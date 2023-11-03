@@ -441,7 +441,7 @@ def show_all_notes(notebook: Notes):
         ellipsis = "..."
         index_width = 4
         print(
-            f'{'id'.upper():<{index_width}} | {'note'.upper():^{TABLE_NOTE_LEN}} | {'tags'.upper():^{TABLE_NOTE_LEN / 2}}')
+            f'{"id".upper():<{index_width}} | {"note".upper():^{TABLE_NOTE_LEN}} | {"tags".upper():^{TABLE_NOTE_LEN / 2}}')
         print('-' * (round(TABLE_NOTE_LEN * 1.5) + index_width + len(ellipsis)))
         for data in all_notes:
             index = list(data.keys())[0]
