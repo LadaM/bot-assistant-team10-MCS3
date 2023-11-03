@@ -61,7 +61,7 @@ class Email(Field):
 
 class Address(Field):
     def __init__(self, value):
-        if len(value) > 4:
+        if len(value.strip()) > 4:
             super().__init__(value)
         else:
             raise ValueError("Address must be at least 5 symbols")
