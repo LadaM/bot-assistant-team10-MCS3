@@ -77,7 +77,12 @@ def main(address_book, notebook):
                 print_info("Goodbye!")
                 break
             case _:
-                print_error("Invalid command. Please try again")
+                matching_commands = commands.get_matching_commands(command)
+                if len(matching_commands) > 0:
+                    print_info("Did you mean this?")
+                    print_info('\n'.join(matching_commands))
+                else:
+                    print_error("Invalid command. Please try again")
 
 
 if __name__ == "__main__":
