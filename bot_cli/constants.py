@@ -11,7 +11,7 @@ COMMAND_LOOKUP: dict = {
     "add-tag": "add-tag <noteId> <tag>",
     "delete-contact": "delete-contact <name>",
     "delete-note": "delete-note <note_id>",
-    "delete-tag": "delete-note <note_id> <tag>",
+    "delete-tag": "delete-tag <note_id> <tag>",
     "birthdays": "birthdays <period?>",
     "change-phone": "change-phone <name> <old_phone> <new_phone>",
     "change-note": "change-note <note_id> <new_note_text>",
