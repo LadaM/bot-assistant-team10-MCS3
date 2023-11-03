@@ -24,7 +24,9 @@ def main(address_book, notebook):
     else:
         print_info("New notebook was created")
 
-    print_warn("Welcome to the assistant bot!\nEnter a command or 'help' to see available commands.")
+    print_warn(
+        "Welcome to the assistant bot!\nEnter a command or 'help' to see available commands."
+    )
 
     while True:
         user_input: str = input("Enter a command: ")
@@ -55,6 +57,10 @@ def main(address_book, notebook):
                 commands.show_email(args)
             case "show-note":
                 commands.show_note(notebook, args)
+            case "add-tag":
+                commands.add_tag(notebook, args)
+            case "delete-tag":
+                commands.delete_tag(notebook, args)
             case "all-notes" | "all-note":
                 commands.show_all_notes(notebook)
             case "delete-contact":
@@ -80,7 +86,7 @@ def main(address_book, notebook):
                 matching_commands = commands.get_matching_commands(command)
                 if len(matching_commands) > 0:
                     print_info("Did you mean this?")
-                    print_info('\n'.join(matching_commands))
+                    print_info("\n".join(matching_commands))
                 else:
                     print_error("Invalid command. Please try again")
 

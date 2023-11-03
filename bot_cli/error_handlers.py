@@ -61,7 +61,9 @@ def change_contact_error(func):
         except ValueError:
             print_error("Phone number doesn't match the format XXXXXXXXXX(10 digits)")
         except KeyError:
-            print_error(f"Contact '{args[0].capitalize()}' has not phone number '{args[1]}'")
+            print_error(
+                f"Contact '{args[0].capitalize()}' has not phone number '{args[1]}'"
+            )
 
     return inner
 
@@ -71,7 +73,9 @@ def search_error(func):
         try:
             return func(*args, **kwargs)
         except CommandError:
-            print_error(f"Invalid search string. Expecting string at least {MIN_SEARCH_STR_LEN} characters long!")
+            print_error(
+                f"Invalid search string. Expecting string at least {MIN_SEARCH_STR_LEN} characters long!"
+            )
 
     return inner
 
@@ -178,5 +182,19 @@ def show_email_error(func):
             print_error(f"Please use format: {COMMAND_LOOKUP.get('show-email')}")
         except ValueError:
             print_error(f"Contact has not set email yet")
+
+    return inner
+
+
+def tag_error_handler(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except CommandError as e:
+            print_error(e.args[0])
+        except ValueError as e:
+            print_error(f"Tag {e.args[0]}")
+        except IndexError:
+            print_error("Invalid note index.")
 
     return inner

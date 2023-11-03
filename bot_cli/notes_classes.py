@@ -1,38 +1,3 @@
-"""
-нотаток буде мати вигляд насутпний:
-{"notes": [
-   {
-   Note: "text",
-   Tags: ['one','two']
-   }
-]
-
-класи:
-Field - базовий
-Note(Field) - поле тексту нотатку - нотаток тільки в одннині стрінга
-Tag(Field) - теги як масив, тобто тут їх буде декілька
-Notes(UserDict) - звичайний словни вигляд матиме такий як зверху формат
-
-важливі зауваження:
-{"Note": note, "Tags": tags}  - повертає нотатки в такому вигляді
-якщо поле "Tags" - у людини пусте, веррне [] пустий масив, треба на обробнику боті конвертувати в шось інше
-якщо команда з Індексо не знайшла шось по індексу, то помилки відловлюєм в боті, я тут не додавав обробник помилок
-якшо команда пошуку (по тексту/тегу) не знайшла співпадіння має вертати всюди пустий масив
-
-доступні методи Notes:
-- ініт - створюється записничок з базовим форматом {"notes": []}
-- add_note(self, note) - додаєм нотаток
-- remove_note(self, index) - видалення по індексу (видаляє все і нотаток і його теги)
-- replace_note(self, index, new_note): - заміна ТЕКСТУ нотатку, позиція і теги залишаються
-- def update_note(self, index, add_note_text): - доповнення нотатку, додається чернз ";"
-- def find_note_by_index(self, index): - шукає по індексу , повертатиме все {"Note": note, "Tags": tags} // note- стрінга + tags - список стрінгів
-- find_note_by_subtext(self, sub_text): - шукає співпадіня по тексут - мінім 3 літери я не виставив обмеження покишо, повертає ось так [{"Note": note, "Tags": tags} ]
-- def show_notes(self): - повертає всі теги notes = [{index: {"Note": note, "Tags": tags}}, {index: {"Note": note, "Tags": tags}}] - обовязково звернути увагу на індекси їх юзати для видачі
-- def add_tag(self, index, tag): - додається тег, обовязково треба додати індекс нотатку
-- remove_tag(self, note_index, tag): - вказати у якому нотатку який тег видалити 
-- change_tag(self): - не писав бо редагування тегів не знаю чи треба - 
-"""
-
 from collections import UserDict
 from address_book_classes import Field
 from constants import FILE_PATH_NOTES
@@ -109,7 +74,7 @@ class Notes(UserDict):
         for index, data in enumerate(self.data["notes"]):
             note = str(data["note"])
             tags = [str(tag) for tag in data["tags"]]
-            notes.append({index+1: {"Note": note.capitalize(), "Tags": tags}})
+            notes.append({index + 1: {"Note": note.capitalize(), "Tags": tags}})
 
         return notes
 
@@ -119,7 +84,11 @@ class Notes(UserDict):
     def remove_tag(self, note_index, tag):
         tags = [str(tag) for tag in self.data["notes"][note_index - 1]["tags"]]
         tag_index = tags.index(tag)
-        del self.data["notes"][note_index - 1]["tags"][tag_index]
+        if tag_index == -1:
+            return "-1"
+        else:
+            del self.data["notes"][note_index - 1]["tags"][tag_index]
+            return "200"
 
     def find_notes_by_tag(self, tag):
         searched_note = []
@@ -135,8 +104,13 @@ class Notes(UserDict):
 
     def to_json(self):
         serialized_data = {
-            "notes": [{"note": str(data["note"].value), "tags": [str(tag.value) for tag in data["tags"]]} for data in
-                      self.data["notes"]]
+            "notes": [
+                {
+                    "note": str(data["note"].value),
+                    "tags": [str(tag.value) for tag in data["tags"]],
+                }
+                for data in self.data["notes"]
+            ]
         }
         return serialized_data
 
@@ -148,7 +122,9 @@ class Notes(UserDict):
         for note_data in data:
             note_value = note_data["note"]
             tags = note_data["tags"]
-            notes_instance.data["notes"].append({"note": Note(note_value), "tags": [Tag(tag) for tag in tags]})
+            notes_instance.data["notes"].append(
+                {"note": Note(note_value), "tags": [Tag(tag) for tag in tags]}
+            )
 
         return notes_instance
 
@@ -200,4 +176,3 @@ if __name__ == "__main__":
     print("Load notes from json file")
     notes.load_notes(FILE_PATH_NOTES)
     print(f"New notes:\n{notes.show_notes()}")
-

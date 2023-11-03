@@ -1,12 +1,46 @@
-from address_book_classes import Name, Phone, Birthday, Record, AddressBook, Email, Address
-from error_handlers import add_contact_error, delete_contact_error, change_contact_error, show_phones_error, \
-    contact_not_found_error, add_birthday_error, show_birthday_error, max_period_error, CommandError, \
-    ContactAlreadyExistsError, ContactNotFoundError, EmailValidationError, search_error, add_address_error, \
-    show_address_error, add_email_error, show_email_error, note_error_handler
+from address_book_classes import (
+    Name,
+    Phone,
+    Birthday,
+    Record,
+    AddressBook,
+    Email,
+    Address,
+)
+from error_handlers import (
+    add_contact_error,
+    delete_contact_error,
+    change_contact_error,
+    show_phones_error,
+    contact_not_found_error,
+    add_birthday_error,
+    show_birthday_error,
+    max_period_error,
+    CommandError,
+    ContactAlreadyExistsError,
+    ContactNotFoundError,
+    EmailValidationError,
+    search_error,
+    add_address_error,
+    show_address_error,
+    add_email_error,
+    show_email_error,
+    note_error_handler,
+    tag_error_handler,
+)
 from notes_classes import Notes
 import textwrap
-from constants import FILE_PATH_CONTACTS, FILE_PATH_NOTES, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, \
-    MIN_NOTE_LEN, TABLE_NOTE_LEN, COMMAND_LOOKUP
+from constants import (
+    FILE_PATH_CONTACTS,
+    FILE_PATH_NOTES,
+    MAX_PERIOD,
+    MIN_PERIOD,
+    DEFAULT_PERIOD,
+    COMMANDS,
+    MIN_NOTE_LEN,
+    TABLE_NOTE_LEN,
+    COMMAND_LOOKUP,
+)
 from print_util import print_warn, print_info, print_success, print_magenta
 
 address_book = AddressBook()
@@ -198,7 +232,7 @@ def search_contacts(args):
             if str(r).casefold().find(search_str) > 0:
                 search_result.append(r)
         if len(search_result) > 0:
-            print_success('\n'.join([str(r) for r in search_result]))
+            print_success("\n".join([str(r) for r in search_result]))
         else:
             print_warn("No results found!")
     except (ValueError, IndexError) as e:
@@ -218,7 +252,9 @@ def show_phones(args):
         raise CommandError
 
     if address_book.find(name):
-        print_success(f"{name.value}: {', '.join(address_book.find(name).get_phones())}")
+        print_success(
+            f"{name.value}: {', '.join(address_book.find(name).get_phones())}"
+        )
     else:
         raise ContactNotFoundError
 
@@ -370,9 +406,11 @@ def show_address(args):
 
 @note_error_handler
 def add_note(notebook: Notes, args):
-    text = ' '.join(args)
+    text = " ".join(args)
     if text.isspace() or len(text) < MIN_NOTE_LEN:
-        raise ValueError(f'Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long')
+        raise ValueError(
+            f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
+        )
     note_id, _ = notebook.add_note(text)
     notebook.save_notes(FILE_PATH_NOTES)
     print_success(f"Note with id {note_id} created successfully")
@@ -383,7 +421,9 @@ def show_note(notebook: Notes, args):
     try:
         note_id = int(args[0])
     except (ValueError, IndexError) as e:
-        raise CommandError("Expecting command in form " + COMMAND_LOOKUP.get('show-note'))
+        raise CommandError(
+            "Expecting command in form " + COMMAND_LOOKUP.get("show-note")
+        )
     try:
         res = notebook.find_note_by_index(note_id)
         print_info(res.get("Note"))
@@ -395,20 +435,26 @@ def show_note(notebook: Notes, args):
 def show_all_notes(notebook: Notes):
     all_notes = notebook.show_notes()
     if len(all_notes) > 0:
-        ellipsis = '...'
+        ellipsis = "..."
         index_width = 4
         print(f"{'id'.upper():<{index_width}} | {'note'.upper():^{TABLE_NOTE_LEN}}")
-        print('-' * (TABLE_NOTE_LEN + index_width + len(ellipsis)))
+        print("-" * (TABLE_NOTE_LEN + index_width + len(ellipsis)))
         for data in all_notes:
             index = list(data.keys())[0]
-            note_text = list(data.values())[0].get('Note')
-            print(f"{index:<5}|{textwrap.shorten(note_text, width=TABLE_NOTE_LEN, placeholder=ellipsis)}")
+            note_text = list(data.values())[0].get("Note")
+            print(
+                f"{index:<5}|{textwrap.shorten(note_text, width=TABLE_NOTE_LEN, placeholder=ellipsis)}"
+            )
     else:
         print_warn("We haven't stored any notes yet.")
 
 
 @note_error_handler
 def change_note(notebook: Notes, args):
+    """
+    change exist notes on new one
+    prints command result
+    """
     index, text = args[0], " ".join(args[1:])
     notebook.change_note(int(index), text)
     notebook.save_notes(FILE_PATH_NOTES)
@@ -417,6 +463,10 @@ def change_note(notebook: Notes, args):
 
 @note_error_handler
 def remove_note(notebook: Notes, args):
+    """
+    remove notes by id
+    prints command result
+    """
     index = args[0]
     notebook.remove_note(int(index))
     notebook.save_notes(FILE_PATH_NOTES)
@@ -425,6 +475,10 @@ def remove_note(notebook: Notes, args):
 
 @note_error_handler
 def search_note(notebook: Notes, args):
+    """
+    searching notes by text
+    prints list of coincidence
+    """
     # find_note_by_subtext
     text = " ".join(args)
     notes = notebook.find_note_by_subtext(text)
@@ -444,3 +498,34 @@ def search_note(notebook: Notes, args):
         output.append(note_string)
     output_string = "\n".join(output)
     print_success(output_string)
+
+
+@note_error_handler
+def add_tag(notebook: Notes, args):
+    """
+    Adds tag by note id
+    prints command result
+    """
+    index, tag = args[0], " ".join(args[1:])
+    if tag.isspace() or len(tag) < MIN_NOTE_LEN:
+        raise ValueError(
+            f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
+        )
+    notebook.add_tag(int(index), tag.casefold())
+    notebook.save_notes(FILE_PATH_NOTES)
+    print_success(f"Note with id {index} successfully update tags")
+
+
+@tag_error_handler
+def delete_tag(notebook: Notes, args):
+    """
+    remove tag by note id
+    prints command result
+    """
+    index, tag = args[0], " ".join(args[1:])
+    result = notebook.remove_tag(int(index), tag.casefold())
+    if result == "-1":
+        print_warn("Tag not found.")
+    else:
+        notebook.save_notes(FILE_PATH_NOTES)
+        print_success("Tag successfully deleted")
