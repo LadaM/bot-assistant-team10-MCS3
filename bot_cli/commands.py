@@ -48,8 +48,7 @@ notebook = Notes()
 
 def help():
     """
-    Prints out available commands
-    prints list of bot commands
+    Prints available bot commands
     """
     sorted_commands = dict(sorted(COMMANDS.items(), key=lambda item: item[0]))
     formatted_commands = ""
@@ -61,6 +60,11 @@ def help():
 
 
 def get_matching_commands(command):
+    """
+    For incomplete or wrong user input checks if it matches existing commands
+    :param command: command entered by the user
+    :return: list of matching commands
+    """
     matching_commands = []
     for c in COMMANDS.keys():
         if c.find(command) >= 0:
@@ -70,9 +74,9 @@ def get_matching_commands(command):
 
 def parse_input(user_input: str):
     """
-    Parse input command
+    Parse user input
     Prints available commands in case of empty input
-    @return - command and arguments
+    :return: command and arguments
     """
     try:
         cmd, *args = user_input.split()
@@ -86,8 +90,7 @@ def parse_input(user_input: str):
 @add_contact_error
 def add_contact(args: list[str, str]):
     """
-    adds a new contact with phone number
-    or adds a new phone number to exist contact
+    Adds a new contact with phone number or adds a new phone number to existing contact
     prints command result
     """
     try:
@@ -120,7 +123,7 @@ def add_contact(args: list[str, str]):
 @delete_contact_error
 def delete_contact(args):
     """
-    delete exist contact
+    Deletes existing contact
     prints command result
     """
     try:
@@ -141,7 +144,7 @@ def delete_contact(args):
 @add_email_error
 def add_email(args):
     """
-    add email for exist user
+    Adds email to existing contact
     prints command result
     """
     try:
@@ -167,7 +170,7 @@ def add_email(args):
 @contact_not_found_error
 def show_email(args):
     """
-    show email for exist user
+    Shows email of existing contact
     prints command result
     """
     try:
@@ -193,7 +196,7 @@ def show_email(args):
 @change_contact_error
 def change_phone(args: list[str, str, str]):
     """
-    change exist contact phone number on new one
+    Changes existing contact's phone number for a new one provided that new number is valid
     prints command result
     """
     try:
@@ -223,7 +226,10 @@ def change_phone(args: list[str, str, str]):
 
 @search_error
 def search_contacts(args):
-    """Finds all records stored in the address book if any attribute of the record match the search string"""
+    """
+    Finds all records stored in the address book if any attribute of the record match the search string
+    prints the search result
+    """
     try:
         search_str = args[0]
         search_result = []
@@ -242,7 +248,7 @@ def search_contacts(args):
 @show_phones_error
 def show_phones(args):
     """
-    show exist contact phone numbers
+    Show existing contact's phone number(s)
     prints command result
     """
     try:
@@ -262,8 +268,8 @@ def show_phones(args):
 @add_birthday_error
 def add_birthday(args):
     """
-    adds birthday to exist contact
-    replaces birthday if already exist
+    Adds birthday to existing contact
+    replaces birthday if it already exists for this contact
     prints command result
     """
     try:
@@ -291,7 +297,7 @@ def add_birthday(args):
 @show_birthday_error
 def show_birthday(args):
     """
-    show birthday of exist user
+    Shows birthday of existing user
     prints command result
     """
     try:
@@ -315,7 +321,7 @@ def show_birthday(args):
 
 def show_all_contacts():
     """
-    show all exist contacts
+    Shows all existing contacts
     prints command result
     """
     if address_book.data:
@@ -330,7 +336,7 @@ def show_all_contacts():
 @max_period_error
 def birthdays(args):
     """
-    ...upcoming birthdays...
+    Presents upcoming birthdays of the users in the address book for a given period
     default period is 7 days
     """
     if args:
@@ -365,7 +371,7 @@ def birthdays(args):
 @add_address_error
 def add_address(args):
     """
-    Adds an address to exist contact
+    Adds an address to existing contact
     Replaces the address if it already exists
     """
     try:
@@ -387,6 +393,10 @@ def add_address(args):
 @contact_not_found_error
 @show_address_error
 def show_address(args):
+    """
+    Shows address of existing user
+    :param args: expects a name
+    """
     try:
         name = args[0]
         name = Name(name)
@@ -405,6 +415,10 @@ def show_address(args):
 
 @note_error_handler
 def add_note(notebook: Notes, args):
+    """
+    Adds a new note to the notebook
+    :param args: expects a valid note text (not empty and at least MIN_NOTE_LEN)
+    """
     text = " ".join(args)
     if text.isspace() or len(text) < MIN_NOTE_LEN:
         raise ValueError(
@@ -417,6 +431,10 @@ def add_note(notebook: Notes, args):
 
 @note_error_handler
 def show_note(notebook: Notes, args):
+    """
+    Presents note stored in the notebook with a given id if it can be found
+    :param args: expects a valid id -- number > 0
+    """
     try:
         note_id = int(args[0])
     except (ValueError, IndexError) as e:
@@ -436,6 +454,9 @@ def show_note(notebook: Notes, args):
 
 @note_error_handler
 def show_all_notes(notebook: Notes):
+    """
+    Presents all notes stored in the notebook inside a table
+    """
     all_notes = notebook.show_notes()
     if len(all_notes) > 0:
         ellipsis = "..."
@@ -456,8 +477,8 @@ def show_all_notes(notebook: Notes):
 @note_error_handler
 def change_note(notebook: Notes, args):
     """
-    change exist notes on new one
-    prints command result
+    Changes the text of existing note for a new text provided that text is valid and note with such i can be found
+    :param args: note_id > 0 and non-empty new_text
     """
     index, text = args[0], " ".join(args[1:])
     notebook.change_note(int(index), text)
@@ -468,8 +489,8 @@ def change_note(notebook: Notes, args):
 @note_error_handler
 def remove_note(notebook: Notes, args):
     """
-    remove notes by id
-    prints command result
+    Removes note with a given id from a notebook given that a note with this id exists
+    :param args: note_id > 0
     """
     index = args[0]
     notebook.remove_note(int(index))
@@ -480,10 +501,9 @@ def remove_note(notebook: Notes, args):
 @note_error_handler
 def search_note(notebook: Notes, args):
     """
-    searching notes by text
-    prints list of coincidence
+    Finds notes matching search string in the notebook and prints them
+    :param args: a valid search string
     """
-    # find_note_by_subtext
     text = " ".join(args)
     notes = notebook.find_note_by_subtext(text)
     if text.isspace() or len(text) < MIN_NOTE_LEN:
