@@ -40,6 +40,9 @@ from constants import (
     TABLE_NOTE_LEN,
     COMMAND_LOOKUP,
 )
+import textwrap
+from constants import FILE_PATH_CONTACTS, FILE_PATH_NOTES, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, \
+    MIN_NOTE_LEN, TABLE_NOTE_LEN, COMMAND_LOOKUP, MIN_SEARCH_STR_LEN
 from print_util import print_warn, print_info, print_success, print_magenta
 
 address_book = AddressBook()
@@ -506,9 +509,9 @@ def search_note(notebook: Notes, args):
     """
     text = " ".join(args)
     notes = notebook.find_note_by_subtext(text)
-    if text.isspace() or len(text) < MIN_NOTE_LEN:
+    if text.isspace() or len(text) < MIN_SEARCH_STR_LEN:
         raise ValueError(
-            f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
+            f"Note cannot be empty and must be more than {MIN_SEARCH_STR_LEN} characters long"
         )
     if not notes:
         print_warn(f"No matches found for: '{text}'")
