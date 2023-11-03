@@ -6,7 +6,7 @@ from error_handlers import add_contact_error, delete_contact_error, change_conta
 from notes_classes import Notes
 import textwrap
 from constants import FILE_PATH_CONTACTS, FILE_PATH_NOTES, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, \
-    MIN_NOTE_LEN, TABLE_NOTE_LEN
+    MIN_NOTE_LEN, TABLE_NOTE_LEN, COMMAND_LOOKUP
 from print_util import print_warn, print_info, print_success, print_magenta
 
 address_book = AddressBook()
@@ -383,7 +383,7 @@ def show_note(notebook: Notes, args):
     try:
         note_id = int(args[0])
     except (ValueError, IndexError) as e:
-        raise CommandError("Expecting command in form " + "show-note <note_id>")
+        raise CommandError("Expecting command in form " + COMMAND_LOOKUP.get('show-note'))
     try:
         res = notebook.find_note_by_index(note_id)
         print_info(res.get("Note"))

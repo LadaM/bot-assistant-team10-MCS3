@@ -1,5 +1,5 @@
 from print_util import print_error
-from constants import MIN_SEARCH_STR_LEN
+from constants import MIN_SEARCH_STR_LEN, COMMAND_LOOKUP
 
 
 class ContactNotFoundError(Exception):
@@ -33,7 +33,7 @@ def add_contact_error(func):
         try:
             return func(args)
         except CommandError:
-            print_error("Please use format: add {name} {phone}")
+            print_error(f"Please use format: {COMMAND_LOOKUP.get('add-contact')}")
         except ValueError:
             print_error("Phone number doesn't match the format XXXXXXXXXX(10 digits)")
         except ContactAlreadyExistsError:
@@ -47,7 +47,7 @@ def delete_contact_error(func):
         try:
             return func(*args)
         except CommandError:
-            print_error("Please use format: delete {name}")
+            print_error(f"Please use format: {COMMAND_LOOKUP.get('delete-contact')}")
 
     return inner
 
@@ -57,7 +57,7 @@ def change_contact_error(func):
         try:
             return func(args)
         except CommandError:
-            print_error("Please use format: change {name} {old_phone} {new_phone}")
+            print_error(f"Please use format: {COMMAND_LOOKUP.get('change-phone')}")
         except ValueError:
             print_error("Phone number doesn't match the format XXXXXXXXXX(10 digits)")
         except KeyError:
@@ -95,7 +95,7 @@ def show_phones_error(func):
         try:
             return func(args)
         except CommandError:
-            print_error("Please use format: phone {name}")
+            print_error(f"Please use format: {COMMAND_LOOKUP.get('show-phone')}")
 
     return inner
 
@@ -105,7 +105,7 @@ def add_birthday_error(func):
         try:
             return func(args)
         except CommandError:
-            print_error("Please use format: add-birthday {user} {DD.MM.YYYY}")
+            print_error(f"Please use format: {COMMAND_LOOKUP.get('add-birthday')}")
         except ValueError:
             print_error(f"'{args[1]}' doesn't match the birthday format DD.MM.YYYY")
 
@@ -117,7 +117,7 @@ def show_birthday_error(func):
         try:
             return func(args)
         except CommandError:
-            print_error("Please use format: show-birthday {user}")
+            print_error(f"Please use format: {COMMAND_LOOKUP.get('show-birthday')}")
         except ValueError:
             print_error(f"Contact has not set birthday yet")
 
@@ -139,7 +139,7 @@ def add_address_error(func):
         try:
             return func(args)
         except CommandError:
-            print_error("Please use format: add-address {user} {address}")
+            print_error(f"Please use format: {COMMAND_LOOKUP.get('add-address')}")
         except ValueError:
             print_error("Address must be at least 5 symbols")
 
@@ -151,7 +151,7 @@ def show_address_error(func):
         try:
             return func(args)
         except CommandError:
-            print_error("Please use format: show-address {user}")
+            print_error(f"Please use format: {COMMAND_LOOKUP.get('show-address')}")
         except ValueError:
             print_error(f"Contact has not set address yet")
 
@@ -163,7 +163,7 @@ def add_email_error(func):
         try:
             return func(args)
         except CommandError:
-            print_error("Please use format: add-email {name} {email}")
+            print_error(f"Please use format: {COMMAND_LOOKUP.get('add-email')}")
         except EmailValidationError:
             print_error("Email address is not valid.")
 
@@ -175,7 +175,7 @@ def show_email_error(func):
         try:
             return func(args)
         except CommandError:
-            print_error("Please use format: show-email {user}")
+            print_error(f"Please use format: {COMMAND_LOOKUP.get('show-email')}")
         except ValueError:
             print_error(f"Contact has not set email yet")
 

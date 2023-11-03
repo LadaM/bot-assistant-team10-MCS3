@@ -32,3 +32,21 @@ FILE_PATH_NOTES = "notes.json"
 MIN_NOTE_LEN = 2
 TABLE_NOTE_LEN = 75
 MIN_SEARCH_STR_LEN = 2
+
+COMMAND_LOOKUP: dict = {
+    "add-contact": "add-contact <user> <phone>",
+    "add-birthday": "add-birthday <user> <birthday>",
+    "add-phone": "add-phone <user> <phone>",
+    "add-email": "add-email <user> <email>",
+    "add-address": "add-address <user> <address>",
+    "add-note": "add-note <note>",
+    "delete-contact": "delete-contact <user>",
+    "delete-note": "delete-note <note_id>",
+    "birthdays": "birthdays <days?>",
+    "change-phone": "change-phone <user> <old_phone> <new_phone>",
+    "show-address": "show-address <user>",
+    "show-birthday": "show-birthday <user>",
+    "show-email": "show-email <user>",
+    "show-phone": "show-phone <user>",
+    "show-note": "show-note <note_id>",
+}
