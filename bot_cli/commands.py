@@ -471,8 +471,9 @@ def show_all_notes(notebook: Notes):
             index = list(data.keys())[0]
             note_text = list(data.values())[0].get('Note')
             tags_text = ", ".join(list(data.values())[0].get('Tags'))
+            note_str = note_text[:TABLE_NOTE_LEN - 3] + '...' if len(note_text) > TABLE_NOTE_LEN else note_text
             print(
-                f"{index:<5}| {note_text[:TABLE_NOTE_LEN - 3] + '...'} | {tags_text:<}")
+                f"{index:<5}| {note_str:<{TABLE_NOTE_LEN}} | {tags_text:<}")
     else:
         print_warn("We haven't stored any notes yet.")
 
