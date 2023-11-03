@@ -7,6 +7,7 @@ from address_book_classes import (
     Email,
     Address,
 )
+from bot_cli.print_util import print_error
 from error_handlers import (
     add_contact_error,
     delete_contact_error,
@@ -29,7 +30,6 @@ from error_handlers import (
     tag_error_handler,
 )
 from notes_classes import Notes
-import textwrap
 from constants import (
     FILE_PATH_CONTACTS,
     FILE_PATH_NOTES,
@@ -441,14 +441,15 @@ def show_all_notes(notebook: Notes):
     if len(all_notes) > 0:
         ellipsis = "..."
         index_width = 4
-        print(f"{'id'.upper():<{index_width}} | {'note'.upper():^{TABLE_NOTE_LEN}}")
-        print("-" * (TABLE_NOTE_LEN + index_width + len(ellipsis)))
+        print(
+            f'{'id'.upper():<{index_width}} | {'note'.upper():^{TABLE_NOTE_LEN}} | {'tags'.upper():^{TABLE_NOTE_LEN / 2}}')
+        print('-' * (round(TABLE_NOTE_LEN * 1.5) + index_width + len(ellipsis)))
         for data in all_notes:
             index = list(data.keys())[0]
-            note_text = list(data.values())[0].get("Note")
+            note_text = list(data.values())[0].get('Note')
+            tags_text = ", ".join(list(data.values())[0].get('Tags'))
             print(
-                f"{index:<5}|{textwrap.shorten(note_text, width=TABLE_NOTE_LEN, placeholder=ellipsis)}"
-            )
+                f"{index:<5}| {note_text:<{TABLE_NOTE_LEN}} | {tags_text:<}")
     else:
         print_warn("We haven't stored any notes yet.")
 
@@ -491,7 +492,7 @@ def search_note(notebook: Notes, args):
             f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
         )
     if not notes:
-        print_info("No matches found for: '{text}'")
+        print_error(f"No matches found for: '{text}'")
     output = []
     for note in notes:
         if note["Tags"]:
