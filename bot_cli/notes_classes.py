@@ -1,38 +1,36 @@
 """
-нотаток буде мати вигляд насутпний:
+Class Notes will have the following data format:
 {"notes": [
    {
    Note: "text",
-   Tags: ['one','two']
+   Tags: ['one', 'two']
    }
 ]
 
-класи:
-Field - базовий
-Note(Field) - поле тексту нотатку - нотаток тільки в одннині стрінга
-Tag(Field) - теги як масив, тобто тут їх буде декілька
-Notes(UserDict) - звичайний словни вигляд матиме такий як зверху формат
+Classes:
+- Field (Base class) - import from adddress_book_classes
+- Note (Field) - Field for the note text - notes are single strings.
+- Tag (Field) - Tags as an array, so there can be multiple tags.
+- Notes (UserDict) - The regular dictionary will have the same format as above.
 
-важливі зауваження:
-{"Note": note, "Tags": tags}  - повертає нотатки в такому вигляді
-якщо поле "Tags" - у людини пусте, веррне [] пустий масив, треба на обробнику боті конвертувати в шось інше
-якщо команда з Індексо не знайшла шось по індексу, то помилки відловлюєм в боті, я тут не додавав обробник помилок
-якшо команда пошуку (по тексту/тегу) не знайшла співпадіння має вертати всюди пустий масив
+Important notes:
+- {"Note": note, "Tags": tags} - returns notes in this format.
+If the "Tags" field is empty, it returns an empty array. You'll need to handle the conversion to something else in the handler.
+If a search command (by text/tag) doesn't find a match, it should return an empty array.
 
-доступні методи Notes:
-- ініт - створюється записничок з базовим форматом {"notes": []}
-- add_note(self, note) - додаєм нотаток
-- remove_note(self, index) - видалення по індексу (видаляє все і нотаток і його теги)
-- replace_note(self, index, new_note): - заміна ТЕКСТУ нотатку, позиція і теги залишаються
-- def update_note(self, index, add_note_text): - доповнення нотатку, додається чернз ";"
-- def find_note_by_index(self, index): - шукає по індексу , повертатиме все {"Note": note, "Tags": tags} // note- стрінга + tags - список стрінгів
-- find_note_by_subtext(self, sub_text): - шукає співпадіня по тексут - мінім 3 літери я не виставив обмеження покишо, повертає ось так [{"Note": note, "Tags": tags} ]
-- def show_notes(self): - повертає всі теги notes = [{index: {"Note": note, "Tags": tags}}, {index: {"Note": note, "Tags": tags}}] - обовязково звернути увагу на індекси їх юзати для видачі
-- def add_tag(self, index, tag): - додається тег, обовязково треба додати індекс нотатку
-- remove_tag(self, note_index, tag): - вказати у якому нотатку який тег видалити 
-- change_tag(self): - не писав бо редагування тегів не знаю чи треба - 
+Available methods for Notes class:
+- __init__ - Initializes the notebook with the base format: {"notes": []}
+- add_note(self, note) - Adds a note.
+- remove_note(self, index) - Removes by index (deletes both the note and its tags).
+- replace_note(self, index, new_note) - Replaces the TEXT of the note; position and tags remain the same.
+- update_note(self, index, add_note_text) - Appends to the note; separated by ";"
+- find_note_by_index(self, index) - Searches by index and returns {"Note": note, "Tags": tags} // note - a string + tags - a list of strings.
+- find_note_by_subtext(self, sub_text) - Searches for matches by text - at least 3 letters; returns [{"Note": note, "Tags": tags}].
+- show_notes(self) - Returns all notes with tags = [{index: {"Note": note, "Tags": tags}}, {index: {"Note": note, "Tags": tags}}] - make sure to pay attention to the indexes for retrieval.
+- add_tag(self, index, tag) - Adds a tag; make sure to provide the note index.
+- remove_tag(self, note_index, tag) - Specify which tag to remove from which note.
+- change_tag(self) - Not implemented; unsure if tag editing is required.
 """
-
 from collections import UserDict
 from address_book_classes import Field
 from constants import FILE_PATH_NOTES
