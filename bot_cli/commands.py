@@ -39,10 +39,8 @@ from constants import (
     MIN_NOTE_LEN,
     TABLE_NOTE_LEN,
     COMMAND_LOOKUP,
+    MIN_SEARCH_STR_LEN,
 )
-import textwrap
-from constants import FILE_PATH_CONTACTS, FILE_PATH_NOTES, MAX_PERIOD, MIN_PERIOD, DEFAULT_PERIOD, COMMANDS, \
-    MIN_NOTE_LEN, TABLE_NOTE_LEN, COMMAND_LOOKUP, MIN_SEARCH_STR_LEN
 from print_util import print_warn, print_info, print_success, print_magenta
 
 address_book = AddressBook()
