@@ -504,13 +504,15 @@ def search_note(notebook: Notes, args):
     print_success(output_string)
 
 
-@note_error_handler
+@tag_error_handler
 def add_tag(notebook: Notes, args):
     """
     Adds tag by note id
     prints command result
     """
     index, tag = args[0], " ".join(args[1:])
+    if int(index) < 1:
+        raise IndexError
     if tag.isspace() or len(tag) < MIN_NOTE_LEN:
         raise ValueError(
             f"Note cannot be empty and must be more than {MIN_NOTE_LEN} characters long"
@@ -527,6 +529,8 @@ def delete_tag(notebook: Notes, args):
     prints command result
     """
     index, tag = args[0], " ".join(args[1:])
+    if int(index) < 1:
+        raise IndexError
     result = notebook.remove_tag(int(index), tag.casefold())
     if result == "-1":
         print_warn("Tag not found.")
