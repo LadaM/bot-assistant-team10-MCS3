@@ -5,7 +5,6 @@ DEFAULT_PERIOD = 7
 COMMAND_LOOKUP: dict = {
     "add-contact": "add-contact <name> <phone>",
     "add-birthday": "add-birthday <name> <birthday>",
-    "add-phone": "add-phone <name> <phone>",
     "add-email": "add-email <name> <email>",
     "add-address": "add-address <name> <address>",
     "add-note": "add-note <note>",
@@ -27,7 +26,6 @@ COMMANDS: dict = {
     "hello": "prints 'How can I help you?'",
     COMMAND_LOOKUP["add-contact"]: "adds a new contact with phone",
     COMMAND_LOOKUP["add-birthday"]: "adds birthday to a contact in format [DD.MM.YYYY]",
-    COMMAND_LOOKUP["add-phone"]: "adds a phone number to a contact",
     COMMAND_LOOKUP["add-email"]: "adds email to a contact",
     COMMAND_LOOKUP["add-address"]: "adds address to a contact",
     COMMAND_LOOKUP["add-note"]: "adds a new note",
