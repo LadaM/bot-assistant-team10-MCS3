@@ -234,6 +234,8 @@ def search_contacts(args):
     try:
         search_str = args[0]
         search_result = []
+        if search_str.isspace() or len(search_str) < MIN_SEARCH_STR_LEN:
+            raise CommandError
         for r in address_book.get_records():
             if str(r).casefold().find(search_str) > 0:
                 search_result.append(r)
@@ -501,6 +503,7 @@ def remove_note(notebook: Notes, args):
 
 
 @note_error_handler
+@search_error
 def search_note(notebook: Notes, args):
     """
     Finds notes matching search string in the notebook and prints them
@@ -509,9 +512,7 @@ def search_note(notebook: Notes, args):
     text = " ".join(args)
     notes = notebook.find_note_by_subtext(text)
     if text.isspace() or len(text) < MIN_SEARCH_STR_LEN:
-        raise ValueError(
-            f"Note cannot be empty and must be more than {MIN_SEARCH_STR_LEN} characters long"
-        )
+        raise CommandError
     if not notes:
         print_warn(f"No matches found for: '{text}'")
     output = []
