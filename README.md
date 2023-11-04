@@ -14,15 +14,15 @@ This app requires:
 
 #### Mac OS, Linux distributions, Windows
 ```shell
-git clone git@github.com:LadaM/bot-assistant-team10.git
-cd bot-assistant-team10
+git clone git@github.com:LadaM/bot-assistant-team10-MCS3.git
+cd bot-assistant-team10-MCS3
 pip3 install -r requirements.txt 
 ```
 
 #### Windows
 ```shell
-git clone git@github.com:LadaM/bot-assistant-team10.git
-dir bot-assistant-team10
+git clone git@github.com:LadaM/bot-assistant-team10-MCS3.git
+dir bot-assistant-team10-MCS3
 pip3 install -r requirements.txt 
 ```
 
